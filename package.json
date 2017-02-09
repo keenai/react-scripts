@@ -7,6 +7,10 @@
   "bin": {
     "keenai-react-scripts": "./bin/keenai-react-scripts.js"
   },
+  "scripts": {
+    "build": "babel scripts/ --out-dir build/",
+    "postinstall": "yarn build"
+  },
   "dependencies": {
     "autoprefixer": "^6.7.2",
     "babel-cli": "^6.22.2",
