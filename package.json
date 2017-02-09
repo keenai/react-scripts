@@ -8,7 +8,9 @@
     "keenai-react-scripts": "./bin/keenai-react-scripts.js"
   },
   "scripts": {
-    "build": "babel scripts/ --out-dir build/",
+    "build": "yarn build:config && yarn build:scripts",
+    "build:config": "babel config/ --out-dir build/config/",
+    "build:scripts": "babel scripts/ --out-dir build/scripts/",
     "postinstall": "yarn build"
   },
   "dependencies": {
