@@ -1,18 +1,24 @@
+/* eslint-disable import/no-mutable-exports */
 // const autoprefixer = require('autoprefixer');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const getClientEnvironment = require('../env');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-const paths = require('../paths');
-const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
-const webpack = require('webpack');
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+import getClientEnvironment from '../env';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import InterpolateHtmlPlugin from 'react-dev-utils/InterpolateHtmlPlugin';
+import paths from '../paths';
+import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
+import webpack from 'webpack';
 
 const isProduction = (process.env.NODE_ENV === 'production');
 const publicPath = '/';
 const publicUrl = '';
 const env = getClientEnvironment(publicUrl);
 
-const sharedConfig = {
+const host = process.env.HOST || 'localhost';
+const protocol = process.env.HTTPS === 'true' ? 'https:' : 'http:';
+const port = Number(process.env.PORT || 3000) + 1;
+const clientUrl = `${protocol}//${host}:${port}`;
+
+let config = {
   resolve: {
     extensions: ['.js', '.json', '.jsx'],
     modules: [
@@ -137,7 +143,9 @@ const sharedConfig = {
 };
 
 if (isProduction) {
-  module.exports = Object.assign({
+  config = {
+    ...config,
+
     bail: true,
 
     devtool: 'source-map',
@@ -152,23 +160,27 @@ if (isProduction) {
       path: paths.BUILD,
       publicPath,
     },
-  }, sharedConfig);
+  };
 }
 
-module.exports = Object.assign({
+config = {
+  ...config,
+
   devtool: 'cheap-module-source-map',
 
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:3000',
+    `webpack-dev-server/client?${clientUrl}`,
     'webpack/hot/only-dev-server',
     paths.CLIENT_ENTRY,
   ],
 
   output: {
-    filename: 'static/js/bundle.js',
+    filename: 'static/js/client.js',
     path: paths.BUILD,
     pathinfo: true,
     publicPath,
   },
-}, sharedConfig);
+};
+
+export default config;
