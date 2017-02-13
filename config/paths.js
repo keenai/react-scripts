@@ -34,7 +34,7 @@ const nodePaths = (process.env.NODE_PATH || '')
   .map(resolveApp)
 ;
 
-module.exports = {
+export default {
   APP_HTML: resolveApp('public/index.html'),
   BUILD: resolveApp('build'),
   CLIENT_ENTRY: resolveApp('src/client/index.js'),
