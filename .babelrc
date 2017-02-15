@@ -1,8 +1,5 @@
 {
   "presets": [
     "keenai"
-  ],
-  "plugins": [
-    "react-hot-loader/babel"
   ]
 }

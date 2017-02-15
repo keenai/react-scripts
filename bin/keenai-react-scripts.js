@@ -19,6 +19,8 @@ if (script === undefined) {
 
 switch (script) {
   case 'start': {
+    process.env.NODE_ENV = 'development';
+
     const result = spawn.sync(
       'node',
       [require.resolve(`../build/scripts/${script}`)].concat(args),
