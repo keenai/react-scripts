@@ -2,67 +2,63 @@
 import chalk from 'chalk';
 import checkRequiredFiles from 'react-dev-utils/checkRequiredFiles';
 import detect from 'detect-port';
+import express from 'express';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import openBrowser from 'react-dev-utils/openBrowser';
-import path from 'path';
 import paths from '../config/paths';
+import rimraf from 'rimraf';
 import spawn from 'cross-spawn';
+import waitOn from 'wait-on';
 import webpack from 'webpack';
 import webpackConfigClient from '../config/webpack/webpack.config.client';
 import webpackConfigServer from '../config/webpack/webpack.config.server';
-import WebpackDevServer from 'webpack-dev-server';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
+const compilers = {};
 const host = process.env.HOST || 'localhost';
 const protocol = process.env.HTTPS === 'true' ? 'https:' : 'http:';
 const serverPort = (process.env.PORT ? Number(process.env.PORT) : 3000);
 const clientPort = serverPort + 1;
+const requiredPorts = [
+  clientPort,
+  serverPort,
+];
 const requiredFiles = [
-  paths.APP_HTML,
   paths.CLIENT_ENTRY,
   paths.SERVER_ENTRY,
 ];
-const url = `${protocol}//${host}:${serverPort}/`;
 
-let expressServer;
-let isFirstCompile = true;
+let nodeServer;
 
-// Warn and crash if required files are missing
-if (!checkRequiredFiles(requiredFiles)) {
-  process.exit(1);
+function cleanBuildPath() {
+  return new Promise((resolve, reject) => {
+    rimraf(paths.BUILD, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
 }
 
-function detectPortAvailability(...ports) {
-  return Promise.all(
-    ports.map(detect),
-  );
-}
+function setupCompiler(bundle) {
+  const { name } = bundle;
+  const compiler = webpack(bundle);
 
-function validatePortAvailability([detectedClientPort, detectedServerPort]) {
-  const clientPortIsAvailable = (detectedClientPort === clientPort);
-  const serverPortIsAvailable = (detectedServerPort === serverPort);
-
-  if (!clientPortIsAvailable || !serverPortIsAvailable) {
-    console.log([
-      chalk.red('Something is already running on the following required port(s):\n'),
-      clientPortIsAvailable ? '' : `  - ${clientPort}`,
-      serverPortIsAvailable ? '' : `  - ${serverPort}`,
-      chalk.red('Please free them up and try again.\n'),
-    ].join('\n'));
-    process.exit(1);
-  }
-
-  return Promise.resolve();
-}
-
-function setupCompiler(config, name) {
-  const compiler = webpack(config);
+  // "compile" event fires while the bundle is compiling. We want to notify
+  // the user when this is occurring.
+  compiler.plugin('compile', () => {
+    console.log(chalk.yellow(`Compiling ${name}...`));
+  });
 
   // "invalid" event fires when you have changed a file, and Webpack is
   // recompiling a bundle. WebpackDevServer takes care to pause serving the
   // bundle, so if you refresh, it'll wait instead of serving the old one.
   // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
   compiler.plugin('invalid', () => {
-    console.log(chalk.yellow(`Compiling ${name}...`));
+    console.log(chalk.yellow(`Bundle "${name}" has changed...`));
   });
 
   // "done" event fires when Webpack has finished recompiling the bundle.
@@ -98,90 +94,167 @@ function setupCompiler(config, name) {
   return compiler;
 }
 
-function compile() {
-  console.log(chalk.yellow('Setting up the compilers...'));
-
-  return Promise.all([
-    setupCompiler(webpackConfigClient, 'client'),
-    setupCompiler(webpackConfigServer, 'server'),
-  ]);
+function setupCompilers() {
+  compilers.client = setupCompiler(webpackConfigClient);
+  compilers.server = setupCompiler(webpackConfigServer);
 }
 
-function runDevServer(compiler) {
-  const devServer = new WebpackDevServer(compiler, {
-    compress: true,
-    clientLogLevel: 'none',
-    contentBase: paths.PUBLIC,
-    hot: true,
-    publicPath: webpackConfigClient.output.publicPath,
-    quiet: true,
-    watchOptions: {
-      ignored: /node_modules/,
-    },
-    https: protocol === 'https:',
-    host,
-  });
+function validateRequiredFilesExist() {
+  if (checkRequiredFiles(requiredFiles)) {
+    return Promise.resolve();
+  }
 
-  devServer.listen(clientPort, (error) => {
-    if (error) {
-      throw error;
-    }
-
-    console.log(chalk.cyan('Starting the development server...'));
-  });
+  return Promise.reject();
 }
 
-function runExpressServer(compiler) {
-  compiler.watch({}, (error, stats) => {
-    if (error) {
-      throw error;
-    }
+function validatePortAvailability() {
+  return Promise
+    .all(
+      requiredPorts.map(detect),
+    )
+    .then(([
+      detectedClientPort,
+      detectedServerPort,
+    ]) => {
+      const clientPortIsAvailable = (detectedClientPort === clientPort);
+      const serverPortIsAvailable = (detectedServerPort === serverPort);
 
-    if (stats.hasErrors()) {
-      return;
-    }
+      if (!clientPortIsAvailable || !serverPortIsAvailable) {
+        console.log([
+          chalk.red('Something is already running on the following required port(s):\n'),
+          clientPortIsAvailable ? '' : `  - ${clientPort}`,
+          serverPortIsAvailable ? '' : `  - ${serverPort}`,
+          chalk.red('Please free them up and try again.\n'),
+        ].join('\n'));
 
-    if (expressServer) {
-      expressServer.kill();
-    }
+        return Promise.reject();
+      }
 
-    expressServer = spawn(
-      'node',
-      [
-        path.resolve(paths.BUILD, webpackConfigServer.output.filename),
-      ],
-      {
-        cwd: path.resolve(__dirname, '../..'),
-        stdio: 'inherit',
-      },
-    );
+      return Promise.resolve();
+    })
+  ;
+}
 
-    if (isFirstCompile && process.stdout.isTTY) {
-      isFirstCompile = false;
+function watchNodeBundle() {
+  let showInstructions = false;
 
-      console.log('The app is running at:\n');
-      console.log(` ${chalk.cyan(url)}\n`);
-      console.log('Note that the development build is not optimized.');
-      console.log(`To create a production build, use ${chalk.cyan('yarn run build')}.`);
+  return new Promise((resolve, reject) => {
+    const startServer = () => {
+      // If the server instance has yet to be defined and the console is
+      // interactive, then this is considered to be our "first launch".
+      // Open the user's browser on a delay of half a second.
+      if (!nodeServer && process.stdout.isTTY) {
+        showInstructions = true;
+      }
 
-      setTimeout(
-        () => openBrowser(url),
-        500,
+      // If we already have a server instance cached, that means we are
+      // restarting the server. So, we should send a kill signal to the
+      // existing instance.
+      if (nodeServer) {
+        console.log(chalk.yellow('Restarting server...'));
+        nodeServer.kill();
+      }
+
+      // Start the server.
+      nodeServer = spawn(
+        'node',
+        [webpackConfigServer.output.path],
+        {
+          stdio: 'inherit',
+        },
       );
-    }
+
+      // Wait for the port to become available before displaying instructions
+      // and resolving.
+      waitOn(
+        {
+          resources: [
+            `tcp:${host}:${serverPort}`,
+          ],
+        },
+        (error) => {
+          if (error) {
+            return reject(error);
+          }
+
+          if (showInstructions) {
+            const urlToOpen = `${protocol}//${host}:${serverPort}/`;
+            showInstructions = false;
+            console.log();
+            console.log('The app is running at:');
+            console.log();
+            console.log('  ', chalk.cyan(urlToOpen));
+            console.log();
+            console.log('Note that the development build is not optimized.');
+            console.log(`To create a production build, use ${chalk.cyan('yarn build')}`);
+            console.log();
+            openBrowser(urlToOpen);
+          }
+
+          return resolve();
+        },
+      );
+    };
+
+    compilers.server.plugin('done', (stats) => (
+      stats.hasErrors() ? reject() : startServer()
+    ));
+
+    compilers.server.watch(
+      {
+        ignored: /node_modules/,
+      },
+      () => undefined,
+    );
   });
 }
 
-detectPortAvailability(clientPort, serverPort)
+function watchWebBundle() {
+  return new Promise((resolve, reject) => {
+    const app = express();
+    const devMiddleware = webpackDevMiddleware(compilers.client, {
+      compress: true,
+      clientLogLevel: 'none',
+      contentBase: paths.PUBLIC,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      host,
+      hot: true,
+      https: protocol === 'https:',
+      publicPath: webpackConfigClient.output.publicPath,
+      quiet: true,
+      watchOptions: {
+        aggregateTimeout: 3000,
+        ignored: /node_modules/,
+      },
+    });
+    const hotMiddleware = webpackHotMiddleware(compilers.client, {
+      log: false,
+    });
+
+    compilers.client.plugin('done', (stats) => (
+      stats.hasErrors() ? reject() : resolve()
+    ));
+
+    app.use(devMiddleware);
+    app.use(hotMiddleware);
+    app.listen(clientPort, host);
+  });
+}
+
+validateRequiredFilesExist()
   .then(validatePortAvailability)
-  .then(compile)
-  .then(([client, server]) => {
-    runDevServer(client);
-    runExpressServer(server);
-  })
+  .then(cleanBuildPath)
+  .then(setupCompilers)
+  .then(watchWebBundle)
+  .then(watchNodeBundle)
   .catch((error) => {
-    console.error(chalk.red.bold(error.name, '\n'));
-    console.error(error.message, '\n');
+    if (error) {
+      console.error(chalk.red.bold(error.name, '\n'));
+      console.error(error.message, '\n');
+      console.error(error.stack);
+    }
     process.exit(1);
   })
 ;
