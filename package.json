@@ -10,7 +10,7 @@
   "scripts": {
     "build": "babel . --out-dir build --ignore ./node_modules/,./bin/,./build/",
     "postinstall": "yarn build",
-    "watch": "yarn build -- --watch"
+    "start": "yarn build -- --watch"
   },
   "dependencies": {
     "autoprefixer": "^6.7.2",
