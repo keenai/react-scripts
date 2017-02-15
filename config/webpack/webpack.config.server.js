@@ -1,42 +1,38 @@
 /* eslint-disable import/no-mutable-exports */
-import fs from 'fs';
+import nodeExternals from 'webpack-node-externals';
 import paths from '../paths';
-import webpackConfigClient from './webpack.config.client';
+import webpackConfig from './webpack.config';
 
-// const isProduction = (process.env.NODE_ENV === 'production');
-const publicPath = '/';
+const config = {
+  ...webpackConfig,
 
-let config = {
-  ...webpackConfigClient,
+  name: 'server',
 
   target: 'node',
 
-  entry: [
-    paths.SERVER_ENTRY,
+  entry: {
+    index: [
+      paths.SERVER_ENTRY,
+    ],
+  },
+
+  externals: [
+    nodeExternals({
+      whitelist: [/^webpack/],
+    }),
   ],
 
-  externals: (
-    fs.readdirSync('node_modules').reduce(
-      (accumulator, module) => ({
-        ...accumulator,
-        [module]: `commonjs ${module}`,
-      }),
-      {},
-    )
-  ),
-
-  node: {},
-};
-
-config = {
-  ...config,
-
   output: {
-    filename: 'static/js/server.js',
-    path: paths.BUILD,
-    pathinfo: true,
-    publicPath,
+    ...webpackConfig.output,
+    libraryTarget: 'commonjs2',
+    path: `${paths.BUILD}/server`,
   },
 };
+
+if (process.env.NODE_ENV === 'development') {
+  config.entry.index.unshift(
+    'source-map-support/register',
+  );
+}
 
 export default config;
