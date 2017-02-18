@@ -64,12 +64,12 @@ const config = {
           cacheDirectory: true,
 
           presets: [
-            'keenai',
             ['latest', {
               es2015: {
                 modules: false,
               },
             }],
+            'keenai',
           ],
         },
       },
