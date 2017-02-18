@@ -225,7 +225,6 @@ function watchWebBundle() {
       publicPath: webpackConfigClient.output.publicPath,
       quiet: true,
       watchOptions: {
-        aggregateTimeout: 3000,
         ignored: /node_modules/,
       },
     });
