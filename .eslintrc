@@ -1,5 +1,8 @@
 {
   "extends": [
     "keenai"
-  ]
+  ],
+  "rules": {
+    "flowtype/require-valid-file-annotation": 0,
+  },
 }
