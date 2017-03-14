@@ -51,27 +51,6 @@ const config = {
         test: /\.(js|jsx)$/,
         include: paths.SOURCE,
         loader: 'babel-loader',
-        query: {
-          // We need to ensure that we do this otherwise the babelrc will
-          // get interpretted and for the current configuration this will mean
-          // that it will kill our webpack treeshaking feature as the modules
-          // transpilation has not been disabled within in.
-          babelrc: false,
-
-          // This is a feature of `babel-loader` for webpack (not Babel itself).
-          // It enables caching results in ./node_modules/.cache/babel-loader/
-          // directory for faster rebuilds.
-          cacheDirectory: true,
-
-          presets: [
-            ['latest', {
-              es2015: {
-                modules: false,
-              },
-            }],
-            'keenai',
-          ],
-        },
       },
 
       {
