@@ -1,8 +1,20 @@
 {
   "name": "@keenai/react-scripts",
   "version": "0.1.2",
+  "description": "Scripts and configuration for Keenai React Applications",
+  "authors": [
+    "Gabe Hayes <gabe@ric.ricoh.com>",
+    "Daniel Bohannon <daniel@ric.ricoh.com>"
+  ],
   "main": "index.js",
-  "repository": "git@github.com:keenai/react-scripts.git",
+  "bugs": {
+    "url": "https://github.com/keenai/react-scripts/issues"
+  },
+  "homepage": "https://github.com/keenai/react-scripts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/keenai/react-scripts.git"
+  },
   "license": "MIT",
   "bin": {
     "keenai-react-scripts": "./bin/keenai-react-scripts.js"
@@ -13,6 +25,7 @@
     "start": "yarn build -- --watch"
   },
   "dependencies": {
+    "@keenai/eslint-config": "^0.1.2",
     "assets-webpack-plugin": "^3.5.1",
     "autoprefixer": "^6.7.7",
     "babel-cli": "^6.24.0",
@@ -30,7 +43,6 @@
     "detect-port": "^1.1.0",
     "dotenv": "^4.0.0",
     "eslint": "^3.17.1",
-    "eslint-config-keenai": "git+ssh://git@github.com/keenai/eslint-config-keenai.git#v0.1.1",
     "eslint-loader": "^1.6.3",
     "express": "^4.15.2",
     "file-loader": "^0.10.1",
