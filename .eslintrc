@@ -1,6 +1,6 @@
 {
   "extends": [
-    "keenai"
+    "@keenai/keenai"
   ],
   "rules": {
     "flowtype/require-valid-file-annotation": 0,
