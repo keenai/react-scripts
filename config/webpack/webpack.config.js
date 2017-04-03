@@ -1,4 +1,5 @@
 /* eslint-disable import/no-mutable-exports */
+import autoprefixer from 'autoprefixer';
 import getClientEnvironment from '../env';
 import paths from '../paths';
 import webpack from 'webpack';
@@ -56,16 +57,27 @@ const config = {
       {
         test: /\.css$/,
         use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'postcss-loader',
-          },
+          'isomorphic-style-loader',
           {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: () => [
+                autoprefixer({
+                  browsers: [
+                    '>1%',
+                    'last 4 versions',
+                    'Firefox ESR',
+                    'not ie < 9', // React doesn't support IE8 anyway
+                  ],
+                }),
+              ],
             },
           },
         ],
