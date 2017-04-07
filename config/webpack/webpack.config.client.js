@@ -1,5 +1,4 @@
 /* eslint-disable import/no-mutable-exports */
-// const autoprefixer = require('autoprefixer');
 import AssetsPlugin from 'assets-webpack-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import paths from '../paths';
