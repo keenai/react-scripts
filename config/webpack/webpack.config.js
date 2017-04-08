@@ -1,4 +1,4 @@
-/* eslint-disable import/no-mutable-exports */
+import { merge } from 'lodash/fp';
 import getClientEnvironment from '../env';
 import paths from '../paths';
 import webpack from 'webpack';
@@ -10,8 +10,8 @@ const protocol = process.env.HTTPS === 'true' ? 'https:' : 'http:';
 const webpackDevPort = Number(process.env.PORT || 3000) + 1;
 const clientUrl = `${protocol}//${host}:${webpackDevPort}/client/`;
 
-const config = {
-  bail: isProduction,
+let config = {
+  bail: true,
 
   devtool: 'source-map',
 
@@ -69,16 +69,16 @@ const config = {
   },
 
   output: {
-    filename: (
-      isProduction
-        ? '[name]-[chunkhash].js'
-        : '[name].js'
-    ),
+    filename: '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js',
     publicPath: `${clientUrl}`,
   },
 
-  performance: false,
+  performance: {
+    hints: 'warning',
+    maxEntrypointSize: .25 * 1e6,
+    maxAssetSize: .25 * 1e6,
+  },
 
   plugins: [
     // Makes some environment variables available to the JS code, for example:
@@ -103,5 +103,19 @@ const config = {
     ],
   },
 };
+
+if (process.env.NODE_ENV === 'development') {
+  config = merge(config, {
+    bail: false,
+
+    devtool: 'cheap-module-source-map',
+
+    output: {
+      filename: '[name].js',
+    },
+
+    performance: false,
+  });
+}
 
 export default config;

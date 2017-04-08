@@ -1,11 +1,9 @@
-/* eslint-disable import/no-mutable-exports */
+import { merge } from 'lodash/fp';
 import nodeExternals from 'webpack-node-externals';
 import paths from '../paths';
 import webpackConfig from './webpack.config';
 
-const config = {
-  ...webpackConfig,
-
+let config = merge(webpackConfig, {
   name: 'server',
 
   target: 'node',
@@ -23,16 +21,20 @@ const config = {
   ],
 
   output: {
-    ...webpackConfig.output,
     libraryTarget: 'commonjs2',
     path: `${paths.BUILD}/server`,
   },
-};
+});
 
-if (process.env.NODE_ENV === 'development') {
-  config.entry.index.unshift(
-    'source-map-support/register',
-  );
+if (process.env.NODE_ENV !== 'production') {
+  config = merge(config, {
+    entry: {
+      index: [
+        'source-map-support/register',
+        paths.SERVER_ENTRY,
+      ],
+    },
+  });
 }
 
 export default config;
