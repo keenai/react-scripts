@@ -1,15 +1,16 @@
-const fs = require('fs');
-const path = require('path');
+// @flow
+import fs from 'fs';
+import path from 'path';
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 
-function resolveApp(relativePath) {
+function resolveApp(relativePath: string): string {
   return path.resolve(appDirectory, relativePath);
 }
 
-function resolveSelf(relativePath) {
+function resolveSelf(relativePath: string): string {
   return path.resolve(__dirname, relativePath);
 }
 

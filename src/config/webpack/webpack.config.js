@@ -1,14 +1,11 @@
+// @flow
+import * as constants from '../constants';
 import { merge } from 'lodash/fp';
-import getClientEnvironment from '../env';
+import getClientEnvironment from '../environment';
 import paths from '../paths';
 import webpack from 'webpack';
 
-const env = getClientEnvironment('');
-const host = process.env.HOST || 'localhost';
-const isProduction = (process.env.NODE_ENV === 'production');
-const protocol = process.env.HTTPS === 'true' ? 'https:' : 'http:';
-const webpackDevPort = Number(process.env.PORT || 3000) + 1;
-const clientUrl = `${protocol}//${host}:${webpackDevPort}/client/`;
+const environment = getClientEnvironment('');
 
 let config = {
   bail: true,
@@ -71,19 +68,19 @@ let config = {
   output: {
     filename: '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js',
-    publicPath: `${clientUrl}`,
+    publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/client/`,
   },
 
   performance: {
     hints: 'warning',
-    maxEntrypointSize: .25 * 1e6,
-    maxAssetSize: .25 * 1e6,
+    maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
+    maxAssetSize: constants.MAX_ASSET_SIZE,
   },
 
   plugins: [
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
-    new webpack.DefinePlugin(env),
+    new webpack.DefinePlugin({
+      'process.env': environment,
+    }),
   ],
 
   resolve: {
@@ -112,10 +109,11 @@ if (process.env.NODE_ENV === 'development') {
 
     output: {
       filename: '[name].js',
+      publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}/client/`,
     },
 
     performance: false,
   });
 }
 
-export default config;
+export default merge({}, config);

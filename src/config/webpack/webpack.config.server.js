@@ -1,3 +1,4 @@
+// @flow
 import { merge } from 'lodash/fp';
 import nodeExternals from 'webpack-node-externals';
 import paths from '../paths';
@@ -21,6 +22,7 @@ let config = merge(webpackConfig, {
   ],
 
   output: {
+    filename: '[name].js',
     libraryTarget: 'commonjs2',
     path: `${paths.BUILD}/server`,
   },
@@ -37,4 +39,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-export default config;
+export default merge({}, config);
