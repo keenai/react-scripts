@@ -1,5 +1,5 @@
 // @flow
-import { attachCompileListeners } from './attach-compile-listeners';
+import { attachCompileListeners } from '../utils';
 import webpack from 'webpack';
 
 export function buildBundle(bundle: Object): Promise<*> {

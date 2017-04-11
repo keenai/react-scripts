@@ -1,6 +1,8 @@
 // @flow
-import { error, log } from './log';
+import { Log } from '../utils';
 import detect from 'detect-port';
+
+const log = new Log();
 
 export function checkRequiredPorts(requiredPorts: Array<number>): Promise<*> {
   return Promise
@@ -13,15 +15,15 @@ export function checkRequiredPorts(requiredPorts: Array<number>): Promise<*> {
       );
 
       if (unavailablePorts.length) {
-        error(
-          'Something is already running on the following required port(s):',
-          unavailablePorts.join(', '),
+        return Promise.reject(
+          new Error([
+            'Something is already running on the following required port(s):',
+            unavailablePorts.join(', '),
+          ].join(' ')),
         );
-
-        return Promise.reject();
       }
 
-      log('Required ports detected.');
+      log.info('Required ports are available.');
 
       return Promise.resolve();
     })
