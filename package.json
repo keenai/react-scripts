@@ -20,7 +20,7 @@
     "keenai-react-scripts": "./bin/keenai-react-scripts.js"
   },
   "scripts": {
-    "build": "babel . --out-dir build --ignore ./node_modules/,./bin/,./build/",
+    "build": "rm -rf ./build && babel ./src --out-dir ./build",
     "postinstall": "yarn build",
     "start": "yarn build -- --watch"
   },
