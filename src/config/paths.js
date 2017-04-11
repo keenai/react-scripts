@@ -37,7 +37,9 @@ const nodePaths = (process.env.NODE_PATH || '')
 
 export default {
   APP_HTML: resolveApp('public/index.html'),
+  ASSETS_FILE: resolveSelf('../build/assets.json'),
   BUILD: resolveApp('build'),
+  BUILD_SELF: resolveSelf('../build'),
   CLIENT_ENTRY: resolveApp('src/client/index.js'),
   NODE_MODULES: resolveApp('node_modules'),
   NODE_MODULES_SELF: resolveSelf('../node_modules'),

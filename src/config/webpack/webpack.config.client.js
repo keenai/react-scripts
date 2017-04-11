@@ -35,7 +35,7 @@ let config = merge(webpackConfig, {
     // our client bundle.
     new AssetsPlugin({
       filename: 'assets.json',
-      path: `${paths.BUILD}/client`,
+      path: paths.BUILD_SELF,
     }),
   ]),
 });

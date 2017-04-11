@@ -1,9 +1,12 @@
 // @flow
 import * as constants from '../config/constants';
 import * as tasks from '../tasks';
+import { Log } from '../utils';
 import paths from '../config/paths';
 import webpackConfigClient from '../config/webpack/webpack.config.client';
 import webpackConfigServer from '../config/webpack/webpack.config.server';
+
+const log = new Log();
 
 const requiredFiles = [
   paths.CLIENT_ENTRY,
@@ -16,18 +19,19 @@ const requiredPorts = [
 ];
 
 async function runTasks() {
-  await tasks.startTimer();
-  await tasks.checkRequiredFiles(requiredFiles);
-  await tasks.checkRequiredPorts(requiredPorts);
-  await tasks.cleanBuildPath();
-  await tasks.buildBundle(webpackConfigClient);
-  await tasks.buildBundle(webpackConfigServer);
-  process.exit(0);
+  try {
+    log.info('Starting production build.');
+    await tasks.checkRequiredFiles(requiredFiles);
+    await tasks.checkRequiredPorts(requiredPorts);
+    await tasks.cleanBuildPath();
+    await tasks.buildBundle(webpackConfigClient);
+    await tasks.buildBundle(webpackConfigServer);
+    log.success('Build completed.');
+    process.exit(0);
+  } catch (error) {
+    console.error(error || 'Uncaught Error');
+    process.exit(1);
+  }
 }
 
-try {
-  runTasks();
-} catch (error) {
-  tasks.error(error || 'Uncaught Error');
-  process.exit(1);
-}
+runTasks();
