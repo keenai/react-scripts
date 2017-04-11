@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@keenai/babel-preset-keenai@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@keenai/babel-preset-keenai/-/babel-preset-keenai-0.1.5.tgz#99d5a8c8f39aff1809696617b8bf18ff3538c3c9"
+"@keenai/babel-preset-keenai@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@keenai/babel-preset-keenai/-/babel-preset-keenai-0.1.6.tgz#aa381fe424235f787939ebac85f581eddf66f09d"
   dependencies:
     babel-plugin-styled-components "^1.1.1"
     babel-plugin-syntax-trailing-function-commas "^6.22.0"
@@ -18,6 +18,7 @@
     babel-preset-latest "^6.24.0"
     babel-preset-react "^6.22.0"
     babel-runtime "^6.22.0"
+    lodash "^4.17.4"
     react-hot-loader "3.0.0-beta.6"
 
 "@keenai/eslint-config-keenai@^0.1.5":
