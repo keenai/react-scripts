@@ -22,7 +22,6 @@ async function runTasks() {
   await tasks.cleanBuildPath();
   await tasks.watchClientBundle(webpackConfigClient);
   await tasks.watchServerBundle(webpackConfigServer);
-  process.exit(0);
 }
 
 try {
