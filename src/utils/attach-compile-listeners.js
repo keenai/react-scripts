@@ -1,14 +1,17 @@
 // @flow
-import { error, log, success, warn } from './log';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
+import Log from './log';
 
-export function attachCompileListeners(compiler: Object): Object {
+const log = new Log();
+
+export default function attachCompileListeners(compiler: Object): Object {
   const { name } = compiler;
 
   // "compile" event fires while the bundle is compiling. We want to notify
   // the user when this is occurring.
   compiler.plugin('compile', () => {
-    log(`Compiling ${name}...`);
+    log.reset();
+    log.info(`Compiling ${name}...`);
   });
 
   // "invalid" event fires when you have changed a file, and Webpack is
@@ -16,7 +19,8 @@ export function attachCompileListeners(compiler: Object): Object {
   // bundle, so if you refresh, it'll wait instead of serving the old one.
   // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
   compiler.plugin('invalid', () => {
-    warn(`Bundle "${name}" has changed...`);
+    log.reset();
+    log.warn(`Bundle "${name}" has changed...`);
   });
 
   // "done" event fires when Webpack has finished recompiling the bundle.
@@ -29,12 +33,12 @@ export function attachCompileListeners(compiler: Object): Object {
     const isSuccessful = !messages.errors.length && !messages.warnings.length;
 
     if (isSuccessful) {
-      success(`Compiled ${name} successfully!`);
+      log.success(`Compiled ${name} successfully!`);
     }
 
     // If errors exist, only show errors.
     if (stats.hasErrors()) {
-      error(`Failed to compile ${name}.`);
+      log.error(`Failed to compile ${name}.`);
 
       messages.errors.forEach((message) => {
         console.log(`\n${message}\n`);
@@ -45,7 +49,7 @@ export function attachCompileListeners(compiler: Object): Object {
 
     // Show warnings if no errors were found.
     if (stats.hasWarnings()) {
-      warn(`Compiled ${name} with warnings.`);
+      log.warn(`Compiled ${name} with warnings.`);
       console.log(messages.warnings.join('\n'));
     }
   });

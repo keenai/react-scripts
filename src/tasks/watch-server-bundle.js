@@ -1,21 +1,16 @@
 // @flow
 import * as constants from '../config/constants';
-import { attachCompileListeners } from './attach-compile-listeners';
-import { debounce } from 'lodash';
-import { success, warn } from './log';
+import { attachCompileListeners } from '../utils';
 import chalk from 'chalk';
+import fs from 'fs';
 import openBrowser from 'react-dev-utils/openBrowser';
+import paths from '../config/paths';
 import spawn from 'cross-spawn';
 import waitOn from 'wait-on';
 import webpack from 'webpack';
 
 let nodeServer;
-
 let showInstructions = false;
-
-const compilerOptions = {
-  ignored: /node_modules/,
-};
 
 function startServer(bundle: Object): Promise<*> {
   return new Promise((resolve, reject) => {
@@ -30,7 +25,6 @@ function startServer(bundle: Object): Promise<*> {
     // restarting the server. So, we should send a kill signal to the
     // existing instance.
     if (nodeServer) {
-      warn('Restarting server...');
       nodeServer.kill();
     }
 
@@ -49,47 +43,51 @@ function startServer(bundle: Object): Promise<*> {
           return reject(error);
         }
 
+        if (showInstructions) {
+          const urlToOpen = `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/`;
+          showInstructions = false;
+          console.log();
+          console.log('The app is running at:');
+          console.log();
+          console.log('  ', chalk.cyan(urlToOpen));
+          console.log();
+          console.log('Note that the development build is not optimized.');
+          console.log(`To create a production build, use ${chalk.cyan('yarn build')}`);
+          console.log();
+          openBrowser(urlToOpen);
+        }
+
         return resolve();
       },
     );
   });
 }
 
+function backdateAssetFile() {
+  const now = Date.now() / 1000;
+  const then = now - 10;
+
+  fs.utimesSync(paths.ASSETS_FILE, then, then);
+}
+
 export function watchServerBundle(bundle: Object): Promise<*> {
   return new Promise((resolve, reject) => {
-    const compiler = webpack(bundle);
-    const onCompile = (error, stats) => {
-      if (error) {
-        return reject(error);
-      }
+    const compiler = attachCompileListeners(webpack(bundle));
 
-      if (stats.hasErrors()) {
-        return reject('Unable to compile server.');
-      }
+    backdateAssetFile();
 
-      return startServer(bundle).then(
-        () => {
-          attachCompileListeners(compiler);
-          success('Compiled server successfully!');
-          if (showInstructions) {
-            const urlToOpen = `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/`;
-            showInstructions = false;
-            console.log();
-            console.log('The app is running at:');
-            console.log();
-            console.log('  ', chalk.cyan(urlToOpen));
-            console.log();
-            console.log('Note that the development build is not optimized.');
-            console.log(`To create a production build, use ${chalk.cyan('yarn build')}`);
-            console.log();
-            openBrowser(urlToOpen);
-          }
-          resolve();
-        },
-        reject,
-      );
-    };
+    compiler.watch(
+      { ignored: /node_modules/ },
+      (error) => {
+        if (error) {
+          return reject(error);
+        }
 
-    compiler.watch(compilerOptions, debounce(onCompile, 500));
+        return startServer(bundle).then(
+          resolve,
+          reject,
+        );
+      },
+    );
   });
 }

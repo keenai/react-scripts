@@ -1,6 +1,6 @@
 {
   "name": "@keenai/react-scripts",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Scripts and configuration for Keenai React Applications",
   "authors": [
     "Gabe Hayes <gabe@ric.ricoh.com>",
@@ -45,6 +45,7 @@
     "express": "^4.15.2",
     "file-loader": "^0.11.1",
     "lodash": "^4.17.4",
+    "node-uuid": "^1.4.8",
     "react-dev-utils": "^0.5.2",
     "react-hot-loader": "3.0.0-beta.6",
     "rimraf": "^2.6.1",

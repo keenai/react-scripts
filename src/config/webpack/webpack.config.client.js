@@ -17,6 +17,7 @@ let config = merge(webpackConfig, {
 
   entry: {
     index: [
+      'babel-polyfill',
       paths.CLIENT_ENTRY,
     ],
   },
@@ -34,7 +35,7 @@ let config = merge(webpackConfig, {
     // our client bundle.
     new AssetsPlugin({
       filename: 'assets.json',
-      path: `${paths.BUILD}/client`,
+      path: paths.BUILD_SELF,
     }),
   ]),
 });
@@ -43,6 +44,7 @@ if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
     entry: {
       index: [
+        'babel-polyfill',
         'react-hot-loader/patch',
         `webpack-hot-middleware/client?reload=true&path=${clientUrl}/__webpack_hmr`,
         paths.CLIENT_ENTRY,

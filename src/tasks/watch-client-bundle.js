@@ -1,6 +1,6 @@
 // @flow
 import * as constants from '../config/constants';
-import { attachCompileListeners } from './attach-compile-listeners';
+import { attachCompileListeners } from '../utils';
 import express from 'express';
 import paths from '../config/paths';
 import webpack from 'webpack';

@@ -1,7 +1,9 @@
 // @flow
-import { log } from './log';
+import { Log } from '../utils';
 import paths from '../config/paths';
 import rimraf from 'rimraf';
+
+const log = new Log();
 
 export function cleanBuildPath(): Promise<*> {
   return new Promise((resolve, reject) => {
@@ -10,7 +12,7 @@ export function cleanBuildPath(): Promise<*> {
         return reject(error);
       }
 
-      log(`Removed build path at "${paths.BUILD}"`);
+      log.info(`Removed build path at "${paths.BUILD}".`);
 
       return resolve();
     });
