@@ -22,11 +22,11 @@ async function runTasks() {
   await tasks.cleanBuildPath();
   await tasks.watchClientBundle(webpackConfigClient);
   await tasks.watchServerBundle(webpackConfigServer);
+  process.exit(0);
 }
 
 try {
   runTasks();
-  process.exit(0);
 } catch (error) {
   tasks.error(error || 'Uncaught Error');
   process.exit(1);

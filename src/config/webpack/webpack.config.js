@@ -48,6 +48,16 @@ let config = {
         test: /\.(js|jsx)$/,
         include: paths.SOURCE,
         loader: 'babel-loader',
+        options: {
+          presets: [
+            ['@keenai/keenai', {
+              presets: [
+                ['env', { modules: false }],
+                'react',
+              ],
+            }],
+          ],
+        },
       },
 
       {
