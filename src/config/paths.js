@@ -11,7 +11,7 @@ function resolveApp(relativePath: string): string {
 }
 
 function resolveSelf(relativePath: string): string {
-  return path.resolve(__dirname, relativePath);
+  return path.resolve(__dirname, '../', relativePath);
 }
 
 // We support resolving modules according to `NODE_PATH`.
