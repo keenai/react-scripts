@@ -1,0 +1,15 @@
+[ignore]
+<PROJECT_ROOT>/build/.*
+
+[libs]
+./flow-typed
+
+[options]
+esproposal.class_instance_fields=enable
+esproposal.class_static_fields=enable
+module.file_ext=.js
+module.file_ext=.json
+
+module.system=haste
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+suppress_type=$FlowIssue

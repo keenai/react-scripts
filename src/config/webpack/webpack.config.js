@@ -1,17 +1,14 @@
-/* eslint-disable import/no-mutable-exports */
-import getClientEnvironment from '../env';
+// @flow
+import * as constants from '../constants';
+import { merge } from 'lodash/fp';
+import getClientEnvironment from '../environment';
 import paths from '../paths';
 import webpack from 'webpack';
 
-const env = getClientEnvironment('');
-const host = process.env.HOST || 'localhost';
-const isProduction = (process.env.NODE_ENV === 'production');
-const protocol = process.env.HTTPS === 'true' ? 'https:' : 'http:';
-const webpackDevPort = Number(process.env.PORT || 3000) + 1;
-const clientUrl = `${protocol}//${host}:${webpackDevPort}/client/`;
+const environment = getClientEnvironment('');
 
-const config = {
-  bail: isProduction,
+let config = {
+  bail: true,
 
   devtool: 'source-map',
 
@@ -51,6 +48,16 @@ const config = {
         test: /\.(js|jsx)$/,
         include: paths.SOURCE,
         loader: 'babel-loader',
+        options: {
+          presets: [
+            ['@keenai/keenai', {
+              presets: [
+                ['env', { modules: false }],
+                'react',
+              ],
+            }],
+          ],
+        },
       },
 
       {
@@ -69,21 +76,21 @@ const config = {
   },
 
   output: {
-    filename: (
-      isProduction
-        ? '[name]-[chunkhash].js'
-        : '[name].js'
-    ),
+    filename: '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js',
-    publicPath: `${clientUrl}`,
+    publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/client/`,
   },
 
-  performance: false,
+  performance: {
+    hints: 'warning',
+    maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
+    maxAssetSize: constants.MAX_ASSET_SIZE,
+  },
 
   plugins: [
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
-    new webpack.DefinePlugin(env),
+    new webpack.DefinePlugin({
+      'process.env': environment,
+    }),
   ],
 
   resolve: {
@@ -104,4 +111,19 @@ const config = {
   },
 };
 
-export default config;
+if (process.env.NODE_ENV === 'development') {
+  config = merge(config, {
+    bail: false,
+
+    devtool: 'cheap-module-source-map',
+
+    output: {
+      filename: '[name].js',
+      publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}/client/`,
+    },
+
+    performance: false,
+  });
+}
+
+export default merge({}, config);
