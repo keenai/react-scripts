@@ -29,7 +29,16 @@ function startServer(bundle: Object): Promise<*> {
     }
 
     // Start the server.
-    nodeServer = spawn('node', [bundle.output.path], { stdio: 'inherit' });
+    nodeServer = spawn(
+      'node',
+      [
+        bundle.output.path,
+        '--debug',
+      ],
+      {
+        stdio: 'inherit',
+      })
+    ;
 
     // Wait for the port to become available before resolving.
     waitOn(

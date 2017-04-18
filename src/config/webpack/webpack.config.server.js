@@ -30,6 +30,7 @@ let config = merge(webpackConfig, {
 
 if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
+    devtool: 'eval-source-map',
     entry: {
       index: [
         'source-map-support/register',

@@ -28,7 +28,7 @@ async function runTasks() {
     await tasks.watchServerBundle(webpackConfigServer);
     log.success('Build completed.');
   } catch (error) {
-    log.error(error || 'Uncaught Error');
+    log.error(error || new Error('Uncaught Error'));
     process.exit(1);
   }
 }

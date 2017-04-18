@@ -45,6 +45,11 @@ switch (script) {
     runScript('start');
     break;
 
+  case 'test':
+    process.env.NODE_ENV = 'test';
+    runScript('test');
+    break;
+
   default:
     console.error(chalk.red(`Unknown script "${script}".`));
     process.exit(1);
