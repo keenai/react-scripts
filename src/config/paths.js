@@ -41,6 +41,7 @@ export default {
   BUILD: resolveApp('build'),
   BUILD_SELF: resolveSelf('../build'),
   CLIENT_ENTRY: resolveApp('src/client/index.js'),
+  JEST_CONFIG: resolveSelf('../.jestconfig'),
   NODE_MODULES: resolveApp('node_modules'),
   NODE_MODULES_SELF: resolveSelf('../node_modules'),
   NODE_PATHS: nodePaths,
