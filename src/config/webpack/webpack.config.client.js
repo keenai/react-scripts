@@ -23,7 +23,6 @@ let config = merge(webpackConfig, {
   },
 
   output: {
-    libraryTarget: 'var',
     path: `${paths.BUILD}/client`,
   },
 
@@ -44,7 +43,6 @@ if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
     entry: {
       index: [
-        'babel-polyfill',
         'react-hot-loader/patch',
         `webpack-hot-middleware/client?reload=true&path=${clientUrl}/__webpack_hmr`,
         paths.CLIENT_ENTRY,
@@ -52,8 +50,11 @@ if (process.env.NODE_ENV === 'development') {
     },
 
     plugins: concat(config.plugins, [
-      // This is necessary to emit hot updates:
+      // This is necessary to emit hot updates
       new webpack.HotModuleReplacementPlugin(),
+
+      // Don't break on errors
+      new webpack.NoEmitOnErrorsPlugin(),
 
       // prints more readable module names in the browser console on HMR updates
       new webpack.NamedModulesPlugin(),
@@ -75,6 +76,13 @@ if (process.env.NODE_ENV === 'development') {
 if (process.env.NODE_ENV === 'production') {
   config = merge(config, {
     plugins: concat(config.plugins, [
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        children: true,
+        minChunks: 2,
+        async: false,
+      }),
+
       // Add GZip compression for static files. This will generate a sibling .gz
       // file with each asset. You must then configure your server with the appropriate
       // middleware so that static .gz files are served when they exist. For an example,

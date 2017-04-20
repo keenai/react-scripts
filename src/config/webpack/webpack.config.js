@@ -49,12 +49,10 @@ let config = {
         include: paths.SOURCE,
         loader: 'babel-loader',
         options: {
+          babelrc: false,
           presets: [
             ['@keenai/keenai', {
-              presets: [
-                ['env', { modules: false }],
-                'react',
-              ],
+              modules: false,
             }],
           ],
         },
@@ -76,8 +74,8 @@ let config = {
   },
 
   output: {
-    filename: '[name]-[chunkhash].js',
-    chunkFilename: '[name]-[chunkhash].js',
+    filename: '[name].[chunkhash].js',
+    chunkFilename: '[name].[chunkhash].chunk.js',
     publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/client/`,
   },
 
@@ -122,7 +120,9 @@ if (process.env.NODE_ENV === 'development') {
       publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}/client/`,
     },
 
-    performance: false,
+    performance: {
+      hints: false,
+    },
   });
 }
 
