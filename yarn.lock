@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@keenai/babel-preset-keenai@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@keenai/babel-preset-keenai/-/babel-preset-keenai-0.2.0.tgz#bdbd702e64df6c1e7b926d8e2497af1f15454e3a"
+"@keenai/babel-preset-keenai@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@keenai/babel-preset-keenai/-/babel-preset-keenai-0.2.1.tgz#1d2718ca420f5dce0d54e11ecfab7109a91d3e8a"
   dependencies:
     babel-plugin-styled-components "^1.1.1"
     babel-plugin-syntax-trailing-function-commas "^6.22.0"
