@@ -32,8 +32,8 @@ function startServer(bundle: Object): Promise<*> {
     nodeServer = spawn(
       'node',
       [
-        bundle.output.path,
         '--debug',
+        `${bundle.output.path}/server`,
       ],
       {
         stdio: 'inherit',
@@ -76,7 +76,7 @@ function backdateAssetFile() {
   const now = Date.now() / 1000;
   const then = now - 10;
 
-  fs.utimesSync(paths.ASSETS_FILE, then, then);
+  fs.utimesSync(paths.MANIFEST_JSON, then, then);
 }
 
 export function watchServerBundle(bundle: Object): Promise<*> {

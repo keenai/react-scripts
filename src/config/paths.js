@@ -37,11 +37,11 @@ const nodePaths = (process.env.NODE_PATH || '')
 
 export default {
   APP_HTML: resolveApp('public/index.html'),
-  ASSETS_FILE: resolveSelf('../build/assets.json'),
   BUILD: resolveApp('build'),
-  BUILD_SELF: resolveSelf('../build'),
+  CHUNK_MANIFEST_JSON: resolveApp('build/chunk-manifest.json'),
   CLIENT_ENTRY: resolveApp('src/client/index.js'),
-  JEST_CONFIG: resolveSelf('../.jestconfig'),
+  JEST_CONFIG: resolveSelf('config/jest'),
+  MANIFEST_JSON: resolveApp('build/manifest.json'),
   NODE_MODULES: resolveApp('node_modules'),
   NODE_MODULES_SELF: resolveSelf('../node_modules'),
   NODE_PATHS: nodePaths,
