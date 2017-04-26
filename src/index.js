@@ -12,7 +12,7 @@ type Manifest = {
 };
 
 type WebpackConfig = {
-  [string]: any,
+  [string]: mixed,
 };
 
 export default {
