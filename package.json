@@ -6,7 +6,7 @@
     "Gabe Hayes <gabe@ric.ricoh.com>",
     "Daniel Bohannon <daniel@ric.ricoh.com>"
   ],
-  "main": "index.js",
+  "main": "build/index.js",
   "bugs": {
     "url": "https://github.com/keenai/react-scripts/issues"
   },
