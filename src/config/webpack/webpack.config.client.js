@@ -1,13 +1,16 @@
 // @flow
 import * as constants from '../constants';
-import { concat, merge } from 'lodash/fp';
 import AssetsPlugin from 'assets-webpack-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
+import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
+import merge from 'webpack-merge';
 import paths from '../paths';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 import webpack from 'webpack';
+import WebpackChunkHash from 'webpack-chunk-hash';
 import webpackConfig from './webpack.config';
 
 const clientUrl = `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}`;
@@ -16,71 +19,92 @@ let config = merge(webpackConfig, {
   name: 'client',
 
   entry: {
-    index: [
-      'babel-polyfill',
+    client: [
       paths.CLIENT_ENTRY,
     ],
   },
 
-  output: {
-    path: `${paths.BUILD}/client`,
-  },
-
-  plugins: concat(webpackConfig.plugins, [
-    // Generates a JSON file containing a map of all the output files for
-    // our webpack bundle.  A necessisty for our server rendering process
-    // as we need to interogate these files in order to know what JS/CSS
-    // we need to inject into our HTML. We only need to know the assets for
-    // our client bundle.
+  plugins: [
     new AssetsPlugin({
-      filename: 'assets.json',
-      path: paths.BUILD_SELF,
+      filename: 'manifest.json',
+      path: paths.BUILD,
     }),
-  ]),
+  ],
 });
 
 if (process.env.NODE_ENV === 'development') {
-  config = merge(config, {
-    entry: {
-      index: [
-        'react-hot-loader/patch',
-        `webpack-hot-middleware/client?reload=true&path=${clientUrl}/__webpack_hmr`,
-        paths.CLIENT_ENTRY,
-      ],
-    },
+  config = merge
+    .strategy({
+      entry: 'prepend',
+    })
+    .call(
+      merge,
+      config,
+      {
+        entry: {
+          client: [
+            'react-hot-loader/patch',
+            `webpack-hot-middleware/client?reload=true&path=${clientUrl}/__webpack_hmr`,
+          ],
+        },
 
-    plugins: concat(config.plugins, [
-      // This is necessary to emit hot updates
-      new webpack.HotModuleReplacementPlugin(),
+        plugins: [
+          // This is necessary to emit hot updates
+          new webpack.HotModuleReplacementPlugin(),
 
-      // Don't break on errors
-      new webpack.NoEmitOnErrorsPlugin(),
+          // Don't break on errors
+          new webpack.NoEmitOnErrorsPlugin(),
 
-      // prints more readable module names in the browser console on HMR updates
-      new webpack.NamedModulesPlugin(),
+          // prints more readable module names in the browser console on HMR updates
+          new webpack.NamedModulesPlugin(),
 
-      // Watcher doesn't work well if you mistype casing in a path so we use
-      // a plugin that prints an error when you attempt to do this.
-      // See https://github.com/facebookincubator/create-react-app/issues/240
-      new CaseSensitivePathsPlugin(),
+          // Watcher doesn't work well if you mistype casing in a path so we use
+          // a plugin that prints an error when you attempt to do this.
+          // See https://github.com/facebookincubator/create-react-app/issues/240
+          new CaseSensitivePathsPlugin(),
 
-      // If you require a missing module and then `npm install` it, you still have
-      // to restart the development server for Webpack to discover it. This plugin
-      // makes the discovery automatic so you don't have to restart.
-      // See https://github.com/facebookincubator/create-react-app/issues/186
-      new WatchMissingNodeModulesPlugin(paths.NODE_MODULES),
-    ]),
-  });
+          // If you require a missing module and then `npm install` it, you still have
+          // to restart the development server for Webpack to discover it. This plugin
+          // makes the discovery automatic so you don't have to restart.
+          // See https://github.com/facebookincubator/create-react-app/issues/186
+          new WatchMissingNodeModulesPlugin(paths.NODE_MODULES),
+
+          new CircularDependencyPlugin({
+            exclude: /node_modules/,
+            failOnError: false,
+          }),
+        ],
+      },
+    );
 }
 
 if (process.env.NODE_ENV === 'production') {
   config = merge(config, {
-    plugins: concat(config.plugins, [
+    plugins: [
+      // Automatically add any package found in the `node_modules` path to the "vendor"
+      // entry point.
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
-        children: true,
-        minChunks: 2,
-        async: false,
+        minChunks(module) {
+          return (
+            module.context &&
+            module.context.includes(paths.NODE_MODULES)
+          );
+        },
+      }),
+
+      // Prevent the vendor entry hash from changing values between builds. The only
+      // time the hash should change is when the chunk contents have changed. See
+      // https://webpack.js.org/guides/caching/ for more information.
+      new webpack.optimize.CommonsChunkPlugin({
+        name: ['vendor', 'manifest'],
+        minChunks: Infinity,
+      }),
+      new webpack.HashedModuleIdsPlugin(),
+      new WebpackChunkHash(),
+      new ChunkManifestPlugin({
+        filename: '../chunk-manifest.json',
+        manifestVariable: 'webpackManifest',
       }),
 
       // Add GZip compression for static files. This will generate a sibling .gz
@@ -120,8 +144,8 @@ if (process.env.NODE_ENV === 'production') {
       //
       // See https://webpack.js.org/plugins/uglifyjs-webpack-plugin/.
       new UglifyJSPlugin(),
-    ]),
+    ],
   });
 }
 
-export default merge({}, config);
+export default { ...config };

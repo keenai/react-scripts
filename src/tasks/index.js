@@ -1,4 +1,5 @@
 // @flow
+export * from './analyze-bundle';
 export * from './build-bundle';
 export * from './check-required-files';
 export * from './check-required-ports';

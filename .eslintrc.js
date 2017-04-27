@@ -5,7 +5,6 @@ module.exports = {
     '@keenai/keenai',
     '@keenai/keenai/flowtype',
   ],
-  parser: 'babel-eslint',
   rules: {
     'no-console': 0,
   },

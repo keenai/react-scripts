@@ -1,9 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable
-  comma-dangle,
-  eslint-disable-line no-console,
-  flowtype/require-valid-file-annotation,
-*/
+/* eslint-disable comma-dangle, no-console, flowtype/require-valid-file-annotation */
 const chalk = require('chalk');
 const spawn = require('cross-spawn');
 
@@ -23,34 +19,26 @@ require('dotenv').config({
 
 const script = process.argv[2];
 const scriptArguments = process.argv.slice(3);
+const scriptEnvironment = {
+  analyze: 'production',
+  build: 'production',
+  start: 'development',
+  test: 'test',
+};
 
-function runScript(scriptName) {
-  const executable = [
-    require.resolve(`../build/scripts/${scriptName}`)
-  ].concat(scriptArguments);
+process.env.NODE_ENV = scriptEnvironment[script];
 
-  process.exit(
-    spawn.sync('node', executable, { stdio: 'inherit' }).status
-  );
+if (!process.env.NODE_ENV) {
+  console.error(chalk.red(`Unknown script "${script}".`));
+  process.exit(1);
 }
 
-switch (script) {
-  case 'build':
-    process.env.NODE_ENV = 'production';
-    runScript('build');
-    break;
-
-  case 'start':
-    process.env.NODE_ENV = 'development';
-    runScript('start');
-    break;
-
-  case 'test':
-    process.env.NODE_ENV = 'test';
-    runScript('test');
-    break;
-
-  default:
-    console.error(chalk.red(`Unknown script "${script}".`));
-    process.exit(1);
-}
+process.exit(
+  spawn
+    .sync(
+      'node',
+      [require.resolve(`../build/scripts/${script}`)].concat(scriptArguments),
+      { stdio: 'inherit' }
+    )
+    .status
+);

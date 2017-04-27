@@ -1,5 +1,5 @@
 // @flow
-import { merge } from 'lodash/fp';
+import merge from 'webpack-merge';
 import nodeExternals from 'webpack-node-externals';
 import paths from '../paths';
 import webpackConfig from './webpack.config';
@@ -10,7 +10,7 @@ let config = merge(webpackConfig, {
   target: 'node',
 
   entry: {
-    index: [
+    server: [
       paths.SERVER_ENTRY,
     ],
   },
@@ -23,21 +23,27 @@ let config = merge(webpackConfig, {
 
   output: {
     filename: '[name].js',
-    libraryTarget: 'commonjs2',
-    path: `${paths.BUILD}/server`,
+    libraryTarget: 'commonjs-module',
   },
 });
 
 if (process.env.NODE_ENV === 'development') {
-  config = merge(config, {
-    devtool: 'eval-source-map',
-    entry: {
-      index: [
-        'source-map-support/register',
-        paths.SERVER_ENTRY,
-      ],
-    },
-  });
+  config = merge
+    .strategy({
+      entry: 'prepend',
+    })
+    .call(
+      merge,
+      config,
+      {
+        devtool: 'eval-source-map',
+        entry: {
+          server: [
+            'source-map-support/register',
+          ],
+        },
+      },
+    );
 }
 
-export default merge({}, config);
+export default { ...config };

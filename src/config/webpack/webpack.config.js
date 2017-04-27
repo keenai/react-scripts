@@ -1,16 +1,14 @@
 // @flow
 import * as constants from '../constants';
-import { merge } from 'lodash/fp';
 import getClientEnvironment from '../environment';
+import merge from 'webpack-merge';
 import paths from '../paths';
 import webpack from 'webpack';
 
-const environment = getClientEnvironment('');
-
 let config = {
-  bail: true,
+  bail: false,
 
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
 
   externals: [],
 
@@ -21,21 +19,6 @@ let config = {
         include: paths.SOURCE,
         loader: 'eslint-loader',
         test: /\.(js|jsx)$/,
-      },
-
-      {
-        exclude: [
-          /\.html$/,
-          /\.(js|jsx)$/,
-          /\.css$/,
-          /\.json$/,
-          /\.svg$/,
-        ],
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'media/[name].[hash:8].[ext]',
-        },
       },
 
       {
@@ -65,6 +48,21 @@ let config = {
           name: 'media/[name].[hash:8].[ext]',
         },
       },
+
+      {
+        exclude: [
+          /\.html$/,
+          /\.(js|jsx)$/,
+          /\.css$/,
+          /\.json$/,
+          /\.svg$/,
+        ],
+        loader: 'url-loader',
+        query: {
+          limit: 10000,
+          name: 'media/[name].[hash:8].[ext]',
+        },
+      },
     ],
   },
 
@@ -74,27 +72,30 @@ let config = {
   },
 
   output: {
-    filename: '[name].[chunkhash].js',
-    chunkFilename: '[name].[chunkhash].chunk.js',
-    publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/client/`,
+    filename: '[name].js',
+    chunkFilename: '[name].[chunkhash].js',
+    path: paths.BUILD,
+    publicPath: '/',
   },
 
   performance: {
-    hints: 'warning',
-    maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
-    maxAssetSize: constants.MAX_ASSET_SIZE,
+    hints: false,
   },
 
   plugins: [
     new webpack.DefinePlugin({
-      'process.env': environment,
+      'process.env': getClientEnvironment(constants.PUBLIC_PATH),
     }),
   ],
 
   resolve: {
     extensions: ['.js', '.json', '.jsx'],
+    mainFields: [
+      'browser',
+      'jsnext:main',
+      'main',
+    ],
     modules: [
-      'node_modules',
       paths.NODE_MODULES,
       paths.NODE_MODULES_SELF,
       ...paths.NODE_PATHS,
@@ -111,19 +112,28 @@ let config = {
 
 if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
-    bail: false,
-
-    devtool: 'cheap-module-source-map',
-
     output: {
-      filename: '[name].js',
-      publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}/client/`,
-    },
-
-    performance: {
-      hints: false,
+      publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}/`,
     },
   });
 }
 
-export default merge({}, config);
+if (process.env.NODE_ENV === 'production') {
+  config = merge(config, {
+    bail: true,
+
+    devtool: 'source-map',
+
+    output: {
+      filename: '[name].[chunkhash].js',
+    },
+
+    performance: {
+      hints: 'warning',
+      maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
+      maxAssetSize: constants.MAX_ASSET_SIZE,
+    },
+  });
+}
+
+export default { ...config };
