@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "cz-conventional-changelog": "^2.0.0",
-    "flow-bin": "^0.44.2"
+    "flow-bin": "^0.45.0"
   },
   "config": {
     "commitizen": {
