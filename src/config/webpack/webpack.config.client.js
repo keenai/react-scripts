@@ -103,7 +103,7 @@ if (process.env.NODE_ENV === 'production') {
       new webpack.HashedModuleIdsPlugin(),
       new WebpackChunkHash(),
       new ChunkManifestPlugin({
-        filename: '../chunk-manifest.json',
+        filename: 'chunk-manifest.json',
         manifestVariable: 'webpackManifest',
       }),
 
