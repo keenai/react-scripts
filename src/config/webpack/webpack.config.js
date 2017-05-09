@@ -1,9 +1,7 @@
 // @flow
 import * as constants from '../constants';
-import getClientEnvironment from '../environment';
 import merge from 'webpack-merge';
 import paths from '../paths';
-import webpack from 'webpack';
 
 let config = {
   bail: false,
@@ -89,12 +87,6 @@ let config = {
   performance: {
     hints: false,
   },
-
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': getClientEnvironment(constants.PUBLIC_PATH),
-    }),
-  ],
 
   resolve: {
     extensions: ['.js', '.json', '.jsx'],

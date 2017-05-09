@@ -5,6 +5,7 @@ import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
+import getClientEnvironment from '../environment';
 import merge from 'webpack-merge';
 import paths from '../paths';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
@@ -25,6 +26,12 @@ let config = merge(webpackConfig, {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': getClientEnvironment(constants.PUBLIC_PATH, {
+        __CLIENT__: true,
+      }),
+    }),
+
     new AssetsPlugin({
       filename: 'manifest.json',
       path: paths.BUILD,
