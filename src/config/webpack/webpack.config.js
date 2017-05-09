@@ -50,10 +50,18 @@ let config = {
       },
 
       {
+        test: /\.(graphql|gql)$/,
+        include: paths.SOURCE,
+        loader: 'graphql-tag/loader',
+      },
+
+      {
         exclude: [
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
+          /\.gql$/,
+          /\.graphql$/,
           /\.json$/,
           /\.svg$/,
         ],
