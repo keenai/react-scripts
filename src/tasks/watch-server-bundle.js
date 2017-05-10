@@ -32,7 +32,6 @@ function startServer(bundle: Object): Promise<*> {
     nodeServer = spawn(
       'node',
       [
-        '--debug',
         `${bundle.output.path}/server`,
       ],
       {
