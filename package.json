@@ -1,6 +1,6 @@
 {
   "name": "@keenai/react-scripts",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Scripts and configuration for Keenai React Applications",
   "authors": [
     "Gabe Hayes <gabe@ric.ricoh.com>",
@@ -31,7 +31,7 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.0",
+    "babel-jest": "^20.0.1",
     "babel-loader": "^7.0.0",
     "babel-runtime": "^6.23.0",
     "case-sensitive-paths-webpack-plugin": "^2.0.0",
@@ -40,7 +40,7 @@
     "circular-dependency-plugin": "^3.0.0",
     "compression-webpack-plugin": "^0.4.0",
     "cross-spawn": "^5.1.0",
-    "detect-port": "^1.1.1",
+    "detect-port": "^1.1.2",
     "dotenv": "^4.0.0",
     "enzyme": "^2.8.2",
     "eslint": "^3.19.0",
@@ -48,7 +48,7 @@
     "express": "^4.15.2",
     "file-loader": "^0.11.1",
     "graphql-tag": "^2.0.0",
-    "jest-cli": "^20.0.0",
+    "jest-cli": "^20.0.1",
     "jest-enzyme": "^3.1.0",
     "lodash": "^4.17.4",
     "node-uuid": "^1.4.8",
@@ -59,7 +59,7 @@
     "react-test-renderer": "^15.5.4",
     "rimraf": "^2.6.1",
     "source-map-support": "^0.4.15",
-    "uglify-js": "https://github.com/mishoo/UglifyJS2.git#harmony-v3.0.2",
+    "uglify-js": "https://github.com/mishoo/UglifyJS2.git#harmony-v3.0.3",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "url-loader": "^0.5.8",
     "wait-on": "^2.0.2",
@@ -71,8 +71,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^2.0.0",
-    "flow-bin": "^0.45.0"
+    "cz-conventional-changelog": "^2.0.0"
   },
   "config": {
     "commitizen": {
