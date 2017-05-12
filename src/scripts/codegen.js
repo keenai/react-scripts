@@ -4,6 +4,7 @@ import path from 'path';
 import paths from '../config/paths';
 import spawn from 'cross-spawn';
 
+const apolloBinary = path.resolve(paths.NODE_MODULES_SELF, '.bin/apollo-codegen');
 const log = new Log();
 const queryGlob = path.resolve(paths.SOURCE, '**/*.graphql');
 const schemaPath = path.resolve(process.cwd(), 'schema.json');
@@ -18,7 +19,7 @@ async function runTasks() {
 
     log.info(`Introspecting ${schemaUrl}.`);
     spawn.sync(
-      'apollo-codegen',
+      apolloBinary,
       ['introspect-schema', schemaUrl, '--output', schemaPath],
       { stdio: 'inherit' },
     );
@@ -26,7 +27,7 @@ async function runTasks() {
 
     log.info(`Generating flow typings for ${queryGlob}.`);
     spawn.sync(
-      'apollo-codegen',
+      apolloBinary,
       ['generate', queryGlob, '--schema', schemaPath, '--output', typingsPath, '--target', 'flow'],
       { stdio: 'inherit' },
     );
