@@ -16,7 +16,7 @@ let config = {
         enforce: 'pre',
         include: paths.SOURCE,
         loader: 'eslint-loader',
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|gql|graphql)$/,
       },
 
       {

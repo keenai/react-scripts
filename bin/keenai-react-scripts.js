@@ -22,6 +22,7 @@ const scriptArguments = process.argv.slice(3);
 const scriptEnvironment = {
   analyze: 'production',
   build: 'production',
+  codegen: 'development',
   start: 'development',
   test: 'test',
 };
