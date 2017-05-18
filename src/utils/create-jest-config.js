@@ -5,7 +5,10 @@ import paths from '../config/paths';
 export default function createJestConfig(rootDir: string = process.cwd()) {
   return {
     collectCoverageFrom: [
-      '<rootDir>/src/*.{js,jsx}',
+      'src/**/*.{js,jsx}',
+      '!src/**/*.{spec,test}.{js,jsx}',
+      '!src/**/*.story.{js,jsx}',
+      '!src/**/__tests__/*.{js,jsx}',
     ],
 
     coverageDirectory: '<rootDir>/coverage',
