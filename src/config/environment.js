@@ -2,7 +2,7 @@
 export default (publicUrl: string, initial: {[string]: mixed} = {}) => (
   Object
     .keys(process.env)
-    .filter((key) => key.startsWith('KEENAI_'))
+    .filter((key) => initial.__SERVER__ || key.startsWith('KEENAI_'))
     .reduce(
       (accumulator, key) => ({
         ...accumulator,
