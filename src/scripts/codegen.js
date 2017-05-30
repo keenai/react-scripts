@@ -8,13 +8,13 @@ const apolloBinary = path.resolve(paths.NODE_MODULES_SELF, '.bin/apollo-codegen'
 const log = new Log();
 const queryGlob = path.resolve(paths.SOURCE, '**/*.graphql');
 const schemaPath = path.resolve(process.cwd(), 'schema.json');
-const schemaUrl = process.env.KEENAI_GRAPHQL_URI;
+const schemaUrl = process.argv[2];
 const typingsPath = path.resolve(process.cwd(), 'flow-typed/schema.js.flow');
 
 async function runTasks() {
   try {
     if (!schemaUrl) {
-      throw new TypeError('Please set the "KEENAI_GRAPHQL_URI" environment variable.');
+      throw new TypeError('You must pass a valid GraphQL URL.');
     }
 
     log.info(`Introspecting ${schemaUrl}.`);
