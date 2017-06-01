@@ -1,5 +1,9 @@
 {
   "presets": [
-    "@keenai/keenai"
-  ]
+    ["@keenai/keenai", {
+      "targets": {
+        "node": "current",
+      },
+    }],
+  ],
 }
