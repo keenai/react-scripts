@@ -1,5 +1,6 @@
 // @flow
 import * as constants from '../constants';
+import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import merge from 'webpack-merge';
 import paths from '../paths';
 
@@ -15,42 +16,36 @@ let config = {
       {
         enforce: 'pre',
         include: paths.SOURCE,
-        loader: 'eslint-loader',
         test: /\.(js|jsx|gql|graphql)$/,
-      },
-
-      {
-        test: /\.(js|jsx)$/,
-        include: paths.SOURCE,
-        loader: 'react-hot-loader/webpack',
-      },
-
-      {
-        test: /\.(js|jsx)$/,
-        include: paths.SOURCE,
-        loader: 'babel-loader',
-        options: {
-          babelrc: false,
-          presets: [
-            ['@keenai/keenai', {
-              modules: false,
-            }],
-          ],
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            formatter: eslintFormatter,
+          },
         },
+      },
+
+      {
+        include: paths.SOURCE,
+        test: /\.(js|jsx)$/,
+        use: 'react-hot-loader/webpack',
+      },
+
+      {
+        include: paths.SOURCE,
+        test: /\.(js|jsx)$/,
+        use: 'babel-loader',
       },
 
       {
         test: /\.svg$/,
-        loader: 'file-loader',
-        query: {
-          name: 'media/[name].[hash:8].[ext]',
-        },
+        use: 'file-loader?name=media/[name].[hash:8].[ext]',
       },
 
       {
-        test: /\.(graphql|gql)$/,
         include: paths.SOURCE,
-        loader: 'graphql-tag/loader',
+        test: /\.(graphql|gql)$/,
+        use: 'graphql-tag/loader',
       },
 
       {
@@ -63,11 +58,7 @@ let config = {
           /\.json$/,
           /\.svg$/,
         ],
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'media/[name].[hash:8].[ext]',
-        },
+        use: 'url-loader?limit=10000&name=media/[name].[hash:8].[ext]',
       },
     ],
   },
