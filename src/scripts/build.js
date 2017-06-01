@@ -1,5 +1,4 @@
 // @flow
-import * as constants from '../config/constants';
 import * as tasks from '../tasks';
 import { Log } from '../utils';
 import paths from '../config/paths';
@@ -13,16 +12,10 @@ const requiredFiles = [
   paths.SERVER_ENTRY,
 ];
 
-const requiredPorts = [
-  constants.PORT,
-  constants.WEBPACK_PORT,
-];
-
 async function runTasks() {
   try {
     log.info('Starting production build.');
     await tasks.checkRequiredFiles(requiredFiles);
-    await tasks.checkRequiredPorts(requiredPorts);
     await tasks.cleanBuildPath();
     await tasks.buildBundle(webpackConfigClient);
     await tasks.buildBundle(webpackConfigServer);
