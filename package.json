@@ -1,6 +1,6 @@
 {
   "name": "@keenai/react-scripts",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Scripts and configuration for Keenai React Applications",
   "authors": [
     "Gabe Hayes <gabe@ric.ricoh.com>",
