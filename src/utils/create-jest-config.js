@@ -30,10 +30,13 @@ export default function createJestConfig(rootDir: string = process.cwd()) {
     ],
 
     transform: {
+      '^.+\\.(gql|graphql)$': (
+        require.resolve('jest-transform-graphql')
+      ),
       '^.+\\.(js|jsx)$': (
         path.resolve(paths.JEST_CONFIG, 'babel-transform.js')
       ),
-      '^(?!.*\\.(js|jsx|json)$)': (
+      '.*': (
         path.resolve(paths.JEST_CONFIG, 'file-transform.js')
       ),
     },
