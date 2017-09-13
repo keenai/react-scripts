@@ -20,7 +20,10 @@ let config = merge(webpackConfig, {
 
   externals: [
     nodeExternals({
-      whitelist: [/^webpack/],
+      whitelist: [
+        /^@keenai\/eyecon/,
+        /^webpack/,
+      ],
     }),
   ],
 
