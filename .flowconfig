@@ -6,6 +6,7 @@
 .*/node_modules/jest-enzyme/.*
 .*/node_modules/graphql/.*
 .*/node_modules/graphql-tag/.*
+.*/node_modules/http-parser-js/.*
 <PROJECT_ROOT>/build/.*
 
 [libs]
