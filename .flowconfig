@@ -1,4 +1,12 @@
 [ignore]
+.*/babel-preset-keenai/.*
+.*/eslint-config-keenai/.*
+.*/node_modules/babel-plugin-transform-react-remove-prop-types/.*
+.*/node_modules/enzyme-matchers/.*
+.*/node_modules/jest-enzyme/.*
+.*/node_modules/graphql/.*
+.*/node_modules/graphql-tag/.*
+.*/node_modules/http-parser-js/.*
 <PROJECT_ROOT>/build/.*
 
 [libs]
@@ -12,4 +20,4 @@ module.file_ext=.json
 
 module.system=haste
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
-suppress_type=$FlowIssue
+suppress_type=$FlowFixMe

@@ -38,7 +38,7 @@ process.exit(
   spawn
     .sync(
       'node',
-      [require.resolve(`../build/scripts/${script}`)].concat(scriptArguments),
+      [require.resolve(`../lib/scripts/${script}`)].concat(scriptArguments),
       { stdio: 'inherit' }
     )
     .status

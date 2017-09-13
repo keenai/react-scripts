@@ -1,12 +1,12 @@
 {
   "name": "@keenai/react-scripts",
-  "version": "0.6.4",
+  "version": "0.7.1",
   "description": "Scripts and configuration for Keenai React Applications",
   "authors": [
     "Gabe Hayes <gabe@ric.ricoh.com>",
     "Daniel Bohannon <daniel@ric.ricoh.com>"
   ],
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "bugs": {
     "url": "https://github.com/keenai/react-scripts/issues"
   },
@@ -17,64 +17,70 @@
   },
   "license": "MIT",
   "bin": {
-    "keenai-react-scripts": "./bin/keenai-react-scripts.js"
+    "react-scripts": "./bin/react-scripts.js"
   },
   "scripts": {
-    "build": "rm -rf ./build && babel ./src --out-dir ./build",
-    "postinstall": "yarn build",
-    "start": "yarn build -- --watch"
+    "build": "rm -rf ./lib && babel ./src --out-dir ./lib",
+    "start": "yarn build --watch"
+  },
+  "devDependencies": {
+    "@keenai/babel-preset-keenai": "^0.5.5",
+    "@keenai/eslint-config-keenai": "^0.4.1",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.0",
+    "babel-jest": "^21.0.2",
+    "babel-loader": "^7.1.2",
+    "babel-runtime": "^6.26.0",
+    "cz-conventional-changelog": "^2.0.0",
+    "eslint": "^4.6.1",
+    "eslint-plugin-import": "^2.6.0",
+    "eslint-plugin-jsx-a11y": "^5.1.0",
+    "eslint-plugin-react": "^7.3.0",
+    "flow-bin": "^0.54.1",
+    "react-hot-loader": "^3.0.0-beta.7"
+  },
+  "peerDependencies": {
+    "jest": "^21.0.0"
   },
   "dependencies": {
-    "@keenai/babel-preset-keenai": "^0.4.0",
-    "@keenai/eslint-config-keenai": "^0.3.2",
-    "apollo-codegen": "^0.16.1",
+    "ajv": "^5.2.2",
+    "apollo-codegen": "^0.16.5",
     "assets-webpack-plugin": "^3.5.1",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
-    "babel-eslint": "^7.2.3",
-    "babel-jest": "^20.0.3",
-    "babel-loader": "^7.0.0",
-    "babel-runtime": "^6.23.0",
+    "babel-core": "^6.26.0",
     "case-sensitive-paths-webpack-plugin": "^2.1.1",
-    "chalk": "^2.0.1",
+    "chalk": "^2.1.0",
     "chunk-manifest-webpack-plugin": "^1.1.0",
-    "circular-dependency-plugin": "^3.0.0",
+    "circular-dependency-plugin": "^4.2.0",
     "compression-webpack-plugin": "^1.0.0",
     "cross-spawn": "^5.1.0",
     "detect-port": "^1.1.3",
     "dotenv": "^4.0.0",
     "enzyme": "^2.8.2",
-    "eslint": "^4.3.0",
-    "eslint-loader": "^1.7.1",
-    "express": "^4.15.3",
+    "express": "^4.15.4",
     "file-loader": "^0.11.1",
+    "graphql": "0.10.1",
     "graphql-tag": "^2.4.2",
-    "jest-cli": "^20.0.4",
-    "jest-enzyme": "^3.2.0",
+    "jest": "^21.0.0",
+    "jest-enzyme": "^3.8.2",
     "jest-transform-graphql": "^2.1.0",
     "lodash": "^4.17.4",
     "node-uuid": "^1.4.8",
     "react": "^15.5.4",
-    "react-dev-utils": "^3.0.0",
+    "react-dev-utils": "^4.0.1",
     "react-dom": "^15.5.4",
-    "react-hot-loader": "3.0.0-beta.6",
     "react-test-renderer": "^15.5.4",
-    "rimraf": "^2.6.1",
-    "source-map-support": "^0.4.15",
-    "uglify-es": "^3.0.15",
+    "rimraf": "^2.6.2",
+    "source-map-support": "^0.4.18",
+    "uglify-es": "^3.1.0",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "url-loader": "^0.5.8",
     "wait-on": "^2.0.2",
-    "webpack": "^3.4.1",
+    "webpack": "^3.5.6",
     "webpack-chunk-hash": "^0.4.0",
-    "webpack-dev-middleware": "^1.10.2",
-    "webpack-hot-middleware": "^2.18.0",
+    "webpack-dev-middleware": "^1.12.0",
+    "webpack-hot-middleware": "^2.19.1",
     "webpack-merge": "^4.1.0",
     "webpack-node-externals": "^1.6.0"
-  },
-  "devDependencies": {
-    "cz-conventional-changelog": "^2.0.0",
-    "flow-bin": "^0.51.1"
   },
   "config": {
     "commitizen": {
