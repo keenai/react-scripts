@@ -25,6 +25,7 @@ const scriptEnvironment = {
   codegen: 'development',
   start: 'development',
   test: 'test',
+  translate: 'development',
 };
 
 process.env.NODE_ENV = scriptEnvironment[script];
