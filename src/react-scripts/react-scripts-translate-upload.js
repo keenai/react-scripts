@@ -4,7 +4,10 @@ import { Log } from '../utils';
 import program from 'commander';
 import runTasks from './run-tasks';
 
-const log = new Log();
+type Options = {
+  projectKey: string,
+  projectId: string,
+};
 
 let inputFile = '';
 
@@ -18,12 +21,15 @@ program
   .parse(process.argv)
 ;
 
+const log = new Log();
+const options: Options = program.opts();
+
 if (!inputFile) {
   log.error('You must provide an input file.');
   process.exit(1);
 }
 
 runTasks(
-  () => tasks.uploadTranslation(program.projectId, program.projectKey, inputFile),
+  () => tasks.uploadTranslation(options.projectId, options.projectKey, inputFile),
   () => log.success('Translation file uploaded.'),
 );

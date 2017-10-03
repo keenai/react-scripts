@@ -4,7 +4,15 @@ import { Log } from '../utils';
 import program from 'commander';
 import runTasks from './run-tasks';
 
-const log = new Log();
+type Options = {
+  glob: string,
+  schema: string,
+  typeDefinitions: string,
+  introspectHeaders: {
+    [string]: string,
+  },
+  introspectMethod: 'GET' | 'POST' | 'PUT',
+};
 
 let graphUrl = '';
 
@@ -21,19 +29,22 @@ program
   .parse(process.argv)
 ;
 
+const log = new Log();
+const options: Options = program.opts();
+
 if (!graphUrl) {
   log.error('You must pass a valid GraphQL URL.');
   process.exit(1);
 }
 
-if (!program.schema) {
+if (!options.schema) {
   log.error('You must provide a schema output path with the -s, --schema option.');
   process.exit(1);
 }
 
 runTasks(
   () => log.info('Generating schema and type definitions.'),
-  () => downloadSchema(graphUrl, program.schema),
-  () => introspectSchema(program.glob, program.schema, program.typeDefinitions),
+  () => downloadSchema(graphUrl, options.schema),
+  () => introspectSchema(options.glob, options.schema, options.typeDefinitions),
   () => log.success('Code generation complete.'),
 );

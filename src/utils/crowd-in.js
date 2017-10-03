@@ -24,7 +24,7 @@ export default class {
     this.projectKey = projectKey;
   }
 
-  exportFile(filename: string, language: string): Promise<Object> {
+  exportFile(filename: string, language: string): Promise<any> {
     return this.fetch('/export-file', {
       query: {
         export_approved_only: 1,

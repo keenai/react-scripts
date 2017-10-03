@@ -76,6 +76,7 @@ if (process.env.NODE_ENV === 'development') {
           // See https://github.com/facebookincubator/create-react-app/issues/186
           new WatchMissingNodeModulesPlugin(paths.NODE_MODULES),
 
+          // Emit a warning when a hairball is found within the source code.
           new CircularDependencyPlugin({
             exclude: /node_modules/,
             failOnError: false,
