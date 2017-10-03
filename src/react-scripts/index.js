@@ -18,5 +18,6 @@ program
   .command('codegen', 'generate graphql schema and definitions')
   .command('start', 'start your project')
   .command('test', 'execute your tests')
+  .command('translate', 'crowdin translation tasks')
   .parse(process.argv)
 ;
