@@ -1,11 +1,11 @@
 // @flow
-export * from './analyze-bundle';
-export * from './build-bundle';
-export * from './check-required-files';
-export * from './check-required-ports';
-export * from './clean-build-path';
-export * from './clean-messages-path';
-export * from './extract-messages';
-export * from './generate-messages-json';
-export * from './watch-client-bundle';
-export * from './watch-server-bundle';
+export { default as analyzeBundle } from './analyze-bundle';
+export { default as buildBundle } from './build-bundle';
+export { default as checkRequiredFiles } from './check-required-files';
+export { default as checkRequiredPorts } from './check-required-ports';
+export { default as cleanBuildPath } from './clean-build-path';
+export { default as cleanMessagesPath } from './clean-messages-path';
+export { default as introspectSchema } from './introspect-schema';
+export { default as pause } from './pause';
+export { default as watchClientBundle } from './watch-client-bundle';
+export { default as watchServerBundle } from './watch-server-bundle';

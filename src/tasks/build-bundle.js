@@ -2,9 +2,9 @@
 import { attachCompileListeners } from '../utils';
 import webpack from 'webpack';
 
-export function buildBundle(bundle: Object): Promise<*> {
-  return new Promise((resolve, reject) => {
-    const compiler = attachCompileListeners(webpack(bundle));
+const compile: (config: Object) => Promise<void> = (config) => (
+  new Promise((resolve, reject) => {
+    const compiler = attachCompileListeners(webpack(config));
 
     compiler.run((error) => {
       if (error) {
@@ -13,5 +13,9 @@ export function buildBundle(bundle: Object): Promise<*> {
 
       return resolve();
     });
-  });
+  })
+);
+
+export default async function (config: Object): Promise<void> {
+  await compile(config);
 }

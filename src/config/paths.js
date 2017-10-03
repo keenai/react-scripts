@@ -49,6 +49,5 @@ export default {
   PUBLIC: resolveApp('public'),
   SERVER_ENTRY: resolveApp('src/server/index.js'),
   SOURCE: resolveApp('src'),
-  STATS_FILE: resolveApp('stats.json'),
   TRANSLATIONS: resolveApp('build/messages'),
 };

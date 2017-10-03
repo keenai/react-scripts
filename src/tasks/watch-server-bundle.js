@@ -78,7 +78,7 @@ function backdateAssetFile() {
   fs.utimesSync(paths.MANIFEST_JSON, then, then);
 }
 
-export function watchServerBundle(bundle: Object): Promise<*> {
+export default async function (bundle: Object): Promise<*> {
   return new Promise((resolve, reject) => {
     const compiler = attachCompileListeners(webpack(bundle));
 

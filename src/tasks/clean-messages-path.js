@@ -5,7 +5,7 @@ import rimraf from 'rimraf';
 
 const log = new Log();
 
-export function cleanMessagesPath(): Promise<*> {
+export default async function (): Promise<void> {
   return new Promise((resolve, reject) => {
     rimraf(paths.TRANSLATIONS, (error) => {
       if (error) {

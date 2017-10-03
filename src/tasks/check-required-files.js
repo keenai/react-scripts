@@ -4,16 +4,14 @@ import check from 'react-dev-utils/checkRequiredFiles';
 
 const log = new Log();
 
-export function checkRequiredFiles(requiredFiles: Array<string>): Promise<*> {
-  return new Promise((resolve, reject) => {
-    if (check(requiredFiles)) {
-      log.info('Required files found.');
-
-      return resolve();
-    }
-
-    return reject(
+export default async function (requiredFiles: Array<string>): Promise<void> {
+  if (!check(requiredFiles)) {
+    return Promise.reject(
       new Error('Missing required files.'),
     );
-  });
+  }
+
+  log.info('Required files found.');
+
+  return Promise.resolve();
 }
