@@ -35,16 +35,16 @@
     "eslint": "^4.7.2",
     "flow-bin": "^0.56.0"
   },
-  "peerDependencies": {
+  "bundleDependencies": {
     "enzyme": "^3.0.0",
-    "graphql": "^0.10.5",
     "graphql-tag": "^2.4.2",
-    "jest": "^21.0.0",
+    "graphql": "^0.10.5",
     "jest-enzyme": "^4.0.0",
     "jest-transform-graphql": "^2.1.0",
-    "react": "^15.5.4",
+    "jest": "^21.0.0",
     "react-dom": "^15.5.4",
-    "react-hot-loader": "^3.0.0-beta.7"
+    "react-hot-loader": "^3.0.0-beta.7",
+    "react": "^15.5.4"
   },
   "dependencies": {
     "ajv": "^5.2.3",
