@@ -19,5 +19,14 @@ program
   .command('start', 'start your project')
   .command('test', 'execute your tests')
   .command('translate', 'crowdin translation tasks')
-  .parse(process.argv)
 ;
+
+program.on('command:*', ([command]) => {
+  process.env.NODE_ENV = {
+    analyze: 'production',
+    build: 'production',
+    test: 'test',
+  }[command] || 'development';
+});
+
+program.parse(process.argv);

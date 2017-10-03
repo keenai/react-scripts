@@ -4,7 +4,14 @@ import { Log } from '../utils';
 import program from 'commander';
 import runTasks from './run-tasks';
 
-const log = new Log();
+type Options = {
+  projectKey: string,
+  projectId: string,
+  idColumnIndex: number,
+  translationColumnIndex: number,
+  directory: string,
+  filename: string,
+};
 
 program
   .option('--project-key <projectKey>', 'crowdin project key', process.env.CROWDIN_PROJECT_KEY)
@@ -16,25 +23,28 @@ program
   .parse(process.argv)
 ;
 
-if (!program.directory) {
+const log = new Log();
+const options: Options = program.opts();
+
+if (!options.directory) {
   log.error('You must provide an output directory with the -d, --directory option.');
   process.exit(1);
 }
 
-if (!program.filename) {
+if (!options.filename) {
   log.error('You must provide a filename with the -f, --filename option.');
   process.exit(1);
 }
 
 runTasks(
   () => tasks.downloadTranslations(
-    program.projectId,
-    program.projectKey,
-    program.filename,
-    program.directory,
+    options.projectId,
+    options.projectKey,
+    options.filename,
+    options.directory,
     [
-      program.idColumnIndex,
-      program.translationColumnIndex,
+      options.idColumnIndex,
+      options.translationColumnIndex,
     ],
   ),
   () => log.success('Translation files downloaded.'),

@@ -19,7 +19,7 @@ const clean: (path: string) => Promise<void> = (path) => (
 );
 
 const convertToJson: (
-  file: string,
+  file: Array<Array<string>>,
   columnPairs: [number, number],
 ) => Promise<Object> = (
   file,
@@ -42,12 +42,12 @@ const makeOutputPath: (
   ...rest: Array<void>
 ) => Promise<void> = (outputDirectory) => (
   new Promise((resolve, reject) => {
-    mkdir(outputDirectory, (error) => {
+    mkdir(outputDirectory, 0o777, (error) => {
       if (error) {
-        return reject(error);
+        reject(error);
+      } else {
+        resolve();
       }
-
-      return resolve();
     });
   })
 );

@@ -9,9 +9,7 @@ import webpackConfigServer from '../config/webpack/webpack.config.server';
 
 const log = new Log();
 
-program
-  .parse(process.argv)
-;
+program.parse(process.argv);
 
 runTasks(
   () => log.info('Starting production build.'),
