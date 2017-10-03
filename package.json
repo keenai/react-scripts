@@ -1,6 +1,6 @@
 {
   "name": "@keenai/react-scripts",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Scripts and configuration for Keenai React Applications",
   "authors": [
     "Gabe Hayes <gabe@ric.ricoh.com>",
@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "bin": {
-    "react-scripts": "./bin/react-scripts.js"
+    "react-scripts": "./lib/react-scripts/index.js"
   },
   "scripts": {
     "build": "rm -rf ./lib && babel ./src --out-dir ./lib",
@@ -70,6 +70,7 @@
     "lodash": "^4.17.4",
     "node-uuid": "^1.4.8",
     "react-dev-utils": "^4.1.0",
+    "request": "^2.83.0",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.4.18",
     "uglify-es": "^3.1.2",

@@ -4,7 +4,7 @@ import detect from 'detect-port';
 
 const log = new Log();
 
-export function checkRequiredPorts(requiredPorts: Array<number>): Promise<*> {
+export default async function (requiredPorts: Array<number>): Promise<void> {
   return Promise
     .all(requiredPorts.map(detect))
     .then((detectedPorts) => {

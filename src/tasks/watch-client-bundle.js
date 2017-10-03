@@ -7,7 +7,7 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-export function watchClientBundle(bundle: Object): Promise<*> {
+export default async function (bundle: Object): Promise<*> {
   return new Promise((resolve, reject) => {
     const app = express();
     const compiler = attachCompileListeners(webpack(bundle));

@@ -76,11 +76,12 @@ const writeCSVFile: (outFile: string) => (csv: string) => Promise<void> = (outFi
   })
 );
 
-export const generateMessagesJSON: (outFile: string) => Promise<void> = (outFile) => (
-  getMessageFiles()
+export default async function (outFile: string): Promise<void> {
+  return getMessageFiles()
     .then(parseMessages)
     .then(concatMessages)
     .then(checkForDuplicateIds)
     .then(generateCSVFile)
     .then(writeCSVFile(outFile))
-);
+  ;
+}

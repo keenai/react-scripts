@@ -22,8 +22,9 @@ const extractMessagesFromFile: (files: Array<string>) => Promise<Array<string>> 
   )
 );
 
-export const extractMessages: () => Promise<void> = () => (
-  getFilesToExtract()
+export default async function (): Promise<void> {
+  return getFilesToExtract()
     .then(extractMessagesFromFile)
     .then((files) => log.info(`Extracted messages from ${files.length} files.`))
-);
+  ;
+}

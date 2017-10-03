@@ -5,16 +5,19 @@ import rimraf from 'rimraf';
 
 const log = new Log();
 
-export function cleanBuildPath(): Promise<*> {
-  return new Promise((resolve, reject) => {
+const clean: () => Promise<void> = () => (
+  new Promise((resolve, reject) => {
     rimraf(paths.BUILD, (error) => {
       if (error) {
         return reject(error);
       }
 
-      log.info(`Removed build path at "${paths.BUILD}".`);
-
       return resolve();
     });
-  });
+  })
+);
+
+export default async function (): Promise<void> {
+  await clean();
+  log.info(`Removed build path at "${paths.BUILD}".`);
 }
