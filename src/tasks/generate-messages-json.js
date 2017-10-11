@@ -62,7 +62,7 @@ const checkForDuplicateIds: (messages: Array<Message>) => Array<Message> = (mess
 
 const generateCSVFile: (messages: Array<Message>) => string = (messages) => stringify(
   messages
-    .sort((a, b) => (a.id > b.id ? 1 : 0))
+    .sort((a, b) => (a.id > b.id ? 1 : -1))
     .map((message) => [
       message.id,
       message.description,
