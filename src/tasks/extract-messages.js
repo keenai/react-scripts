@@ -1,30 +1,28 @@
 // @flow
 import { Log } from '../utils';
-import { transformFile } from 'babel-core';
-import glob from 'glob';
 import paths from '../config/paths';
+import spawn from 'cross-spawn';
 
 const log = new Log();
 
-const getFilesToExtract: () => Promise<Array<string>> = () => (
-  new Promise((resolve, reject) => (
-    glob(`${paths.SOURCE}/**/*.jsx`, (error, files) => (error ? reject(error) : resolve(files)))
-  ))
-);
+const transformSource: () => Promise<void> = () => {
+  try {
+    spawn.sync(
+      `${paths.NODE_MODULES_SELF}/.bin/babel`,
+      [paths.SOURCE, '--out-dir', paths.BUILD, '--quiet'],
+      { stdio: 'inherit' },
+    );
+  } catch (e) {
+    return Promise.reject(e);
+  }
 
-const extractMessagesFromFile: (files: Array<string>) => Promise<Array<string>> = (files) => (
-  Promise.all(
-    files.map((file) => (
-      new Promise((resolve, reject) => (
-        transformFile(file, (error, result) => (error ? reject(error) : resolve(result)))
-      ))
-    )),
-  )
-);
+  return Promise.resolve();
+};
 
 export default async function (): Promise<void> {
-  return getFilesToExtract()
-    .then(extractMessagesFromFile)
-    .then((files) => log.info(`Extracted messages from ${files.length} files.`))
+  log.info('Extracting messages from source.');
+
+  return transformSource()
+    .then(() => log.info('Messages extracted.'))
   ;
 }
