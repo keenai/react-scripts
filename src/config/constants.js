@@ -12,7 +12,7 @@ export const PROTOCOL = process.env.HTTPS === 'true' ? 'https:' : 'http:';
 
 export const PORT = Number(process.env.PORT || 3000);
 
-export const PUBLIC_PATH = process.env.PUBLIC_PATH || '';
+export const PUBLIC_PATH = `${String(process.env.PUBLIC_PATH || '')}/`.replace(/\/+$/, '/');
 
 export const MAX_ENTRYPOINT_SIZE = 0.25 * 1e6;
 
