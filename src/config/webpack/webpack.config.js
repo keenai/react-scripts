@@ -1,5 +1,6 @@
 // @flow
 import * as constants from '../constants';
+import { URL } from 'url';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import merge from 'webpack-merge';
 import paths from '../paths';
@@ -72,7 +73,7 @@ let config = {
     filename: '[name].js',
     chunkFilename: '[name].[chunkhash].js',
     path: paths.BUILD,
-    publicPath: '/',
+    publicPath: constants.PUBLIC_PATH,
   },
 
   performance: {
@@ -104,7 +105,10 @@ let config = {
 if (process.env.NODE_ENV === 'development') {
   config = merge(config, {
     output: {
-      publicPath: `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}/`,
+      publicPath: new URL(
+        constants.PUBLIC_PATH,
+        `${constants.PROTOCOL}//${constants.HOST}:${constants.WEBPACK_PORT}`,
+      ).toString(),
     },
   });
 }
