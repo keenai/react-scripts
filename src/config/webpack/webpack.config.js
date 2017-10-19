@@ -40,7 +40,7 @@ let config = {
 
       {
         test: /\.svg$/,
-        use: `file-loader?name=${constants.PUBLIC_PATH}[name].[hash:8].[ext]`,
+        use: `file-loader?name=[name].[hash:8].[ext]&publicPath=${constants.PUBLIC_PATH}`,
       },
 
       {
@@ -59,7 +59,7 @@ let config = {
           /\.json$/,
           /\.svg$/,
         ],
-        use: `url-loader?limit=10000&name=${constants.PUBLIC_PATH}[name].[hash:8].[ext]`,
+        use: 'url-loader?limit=10000',
       },
     ],
   },
