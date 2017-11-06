@@ -1,5 +1,6 @@
 // @flow
 import * as constants from '../constants';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import AssetsPlugin from 'assets-webpack-plugin';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import ChunkManifestPlugin from 'chunk-manifest-webpack-plugin';
@@ -36,6 +37,16 @@ let config = merge(webpackConfig, {
       filename: 'manifest.json',
       path: paths.BUILD,
     }),
+
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      defaultSizes: 'gzip',
+      generateStatsFile: true,
+      logLevel: 'warn',
+      openAnalyzer: false,
+      reportFilename: 'stats.html',
+      statsFilename: 'stats.json',
+    }),
   ],
 });
 
@@ -56,14 +67,14 @@ if (process.env.NODE_ENV === 'development') {
         },
 
         plugins: [
+          // prints more readable module names in the browser console on HMR updates
+          new webpack.NamedModulesPlugin(),
+
           // This is necessary to emit hot updates
           new webpack.HotModuleReplacementPlugin(),
 
           // Don't break on errors
           new webpack.NoEmitOnErrorsPlugin(),
-
-          // prints more readable module names in the browser console on HMR updates
-          new webpack.NamedModulesPlugin(),
 
           // Watcher doesn't work well if you mistype casing in a path so we use
           // a plugin that prints an error when you attempt to do this.
@@ -88,6 +99,13 @@ if (process.env.NODE_ENV === 'development') {
 
 if (process.env.NODE_ENV === 'production') {
   config = merge(config, {
+    performance: {
+      assetFilter: (assetFilename) => assetFilename.endsWith('.js.gz'),
+      hints: 'warning',
+      maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
+      maxAssetSize: constants.MAX_ASSET_SIZE,
+    },
+
     plugins: [
       // Automatically add any package found in the `node_modules` path to the "vendor"
       // entry point.

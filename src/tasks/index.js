@@ -1,5 +1,4 @@
 // @flow
-export { default as analyzeBundle } from './analyze-bundle';
 export { default as buildBundle } from './build-bundle';
 export { default as checkRequiredFiles } from './check-required-files';
 export { default as checkRequiredPorts } from './check-required-ports';
