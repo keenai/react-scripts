@@ -47,4 +47,5 @@ runTasks(
   () => downloadSchema(graphUrl, options.schema),
   () => introspectSchema(options.glob, options.schema, options.typeDefinitions),
   () => log.success('Code generation complete.'),
+  (process) => process.exit(0),
 );

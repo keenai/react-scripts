@@ -20,5 +20,4 @@ runTasks(
   () => tasks.watchClientBundle(webpackConfigClient),
   () => tasks.watchServerBundle(webpackConfigServer),
   () => log.success('Build completed.'),
-  () => tasks.pause(),
 );

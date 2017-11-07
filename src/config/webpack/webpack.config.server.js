@@ -50,7 +50,6 @@ if (process.env.NODE_ENV === 'development') {
       merge,
       config,
       {
-        devtool: 'eval-source-map',
         entry: {
           server: [
             'source-map-support/register',

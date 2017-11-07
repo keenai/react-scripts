@@ -26,4 +26,5 @@ runTasks(
   () => tasks.extractMessages(),
   () => tasks.generateMessagesJSON(outputFile),
   () => log.success(`Translation file created at "${outputFile}"`),
+  (process) => process.exit(0),
 );

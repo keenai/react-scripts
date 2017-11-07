@@ -32,4 +32,5 @@ if (!inputFile) {
 runTasks(
   () => tasks.uploadTranslation(options.projectId, options.projectKey, inputFile),
   () => log.success('Translation file uploaded.'),
+  (process) => process.exit(0),
 );

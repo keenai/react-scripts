@@ -8,7 +8,7 @@ import paths from '../paths';
 let config = {
   bail: false,
 
-  devtool: 'cheap-module-source-map',
+  devtool: 'source-map',
 
   externals: [],
 
@@ -66,6 +66,7 @@ let config = {
   output: {
     filename: '[name].js',
     chunkFilename: '[name].[chunkhash].js',
+    devtoolModuleFilenameTemplate: '../[resourcePath]',
     path: paths.BUILD,
     publicPath: constants.PUBLIC_PATH,
   },
@@ -105,8 +106,6 @@ if (process.env.NODE_ENV === 'development') {
 if (process.env.NODE_ENV === 'production') {
   config = merge(config, {
     bail: true,
-
-    devtool: 'source-map',
 
     output: {
       filename: '[name].[chunkhash].js',
