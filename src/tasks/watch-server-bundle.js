@@ -32,12 +32,13 @@ function startServer(bundle: Object): Promise<*> {
     nodeServer = spawn(
       'node',
       [
+        '--inspect',
         `${bundle.output.path}/server`,
       ],
       {
         stdio: 'inherit',
-      })
-    ;
+      },
+    );
 
     // Wait for the port to become available before resolving.
     waitOn(
@@ -54,6 +55,7 @@ function startServer(bundle: Object): Promise<*> {
         if (showInstructions) {
           const urlToOpen = `${constants.PROTOCOL}//${constants.HOST}:${constants.PORT}/`;
           showInstructions = false;
+          /* eslint-disable no-console */
           console.log();
           console.log('The app is running at:');
           console.log();
@@ -62,6 +64,7 @@ function startServer(bundle: Object): Promise<*> {
           console.log('Note that the development build is not optimized.');
           console.log(`To create a production build, use ${chalk.cyan('yarn build')}`);
           console.log();
+          /* eslint-enable */
           openBrowser(urlToOpen);
         }
 
