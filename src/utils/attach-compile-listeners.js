@@ -20,7 +20,7 @@ export default function attachCompileListeners(compiler: Object): Object {
   // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
   compiler.plugin('invalid', () => {
     log.reset();
-    log.warn(`Bundle "${name}" has changed...`);
+    log.info(`Bundle "${name}" has changed...`);
   });
 
   // "done" event fires when Webpack has finished recompiling the bundle.
@@ -41,7 +41,7 @@ export default function attachCompileListeners(compiler: Object): Object {
       log.error(`Failed to compile ${name}.`);
 
       messages.errors.forEach((message) => {
-        console.log(`\n${message}\n`);
+        console.error(`\n${message}\n`); // eslint-disable-line no-console
       });
 
       return;
@@ -50,7 +50,7 @@ export default function attachCompileListeners(compiler: Object): Object {
     // Show warnings if no errors were found.
     if (stats.hasWarnings()) {
       log.warn(`Compiled ${name} with warnings.`);
-      console.log(messages.warnings.join('\n'));
+      console.warn(`\n${messages.warnings.join('\n')}\n`); // eslint-disable-line no-console
     }
   });
 
