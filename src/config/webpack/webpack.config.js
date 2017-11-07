@@ -29,12 +29,6 @@ let config = {
       {
         include: paths.SOURCE,
         test: /\.(js|jsx)$/,
-        use: 'react-hot-loader/webpack',
-      },
-
-      {
-        include: paths.SOURCE,
-        test: /\.(js|jsx)$/,
         use: 'babel-loader',
       },
 
@@ -82,11 +76,6 @@ let config = {
 
   resolve: {
     extensions: ['.js', '.json', '.jsx'],
-    mainFields: [
-      'browser',
-      'jsnext:main',
-      'main',
-    ],
     modules: [
       paths.NODE_MODULES,
       paths.NODE_MODULES_SELF,
@@ -121,12 +110,6 @@ if (process.env.NODE_ENV === 'production') {
 
     output: {
       filename: '[name].[chunkhash].js',
-    },
-
-    performance: {
-      hints: 'warning',
-      maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
-      maxAssetSize: constants.MAX_ASSET_SIZE,
     },
   });
 }

@@ -13,7 +13,6 @@ import program from 'commander';
 
 program
   .version(version)
-  .command('analyze', 'extract bundle statistics')
   .command('build', 'build your project')
   .command('codegen', 'generate graphql schema and definitions')
   .command('start', 'start your project')
@@ -23,7 +22,6 @@ program
 
 program.on('command:*', ([command]) => {
   process.env.NODE_ENV = {
-    analyze: 'production',
     build: 'production',
     test: 'test',
   }[command] || 'development';

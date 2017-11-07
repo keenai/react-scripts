@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "@keenai/javascript",
+    "@keenai/flowtype",
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["./src"],
+      },
+    },
+  },
+}
