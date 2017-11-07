@@ -111,12 +111,6 @@ if (process.env.NODE_ENV === 'production') {
     output: {
       filename: '[name].[chunkhash].js',
     },
-
-    performance: {
-      hints: 'warning',
-      maxEntrypointSize: constants.MAX_ENTRYPOINT_SIZE,
-      maxAssetSize: constants.MAX_ASSET_SIZE,
-    },
   });
 }
 
