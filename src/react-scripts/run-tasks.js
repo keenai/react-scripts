@@ -5,11 +5,11 @@ const log = new Log();
 
 export default function runTasks(...tasks: Array<Function>) {
   if (tasks.length === 0) {
-    process.exit(0);
+    return;
   }
 
   const run = (fn: Function) => (
-    typeof fn.then === 'function' ? fn(this) : Promise.resolve(fn(this))
+    typeof fn.then === 'function' ? fn(process) : Promise.resolve(fn(process))
   );
 
   run(tasks[0])

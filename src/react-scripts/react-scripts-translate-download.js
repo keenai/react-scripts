@@ -48,4 +48,5 @@ runTasks(
     ],
   ),
   () => log.success('Translation files downloaded.'),
+  (process) => process.exit(0),
 );

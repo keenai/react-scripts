@@ -18,4 +18,5 @@ runTasks(
   () => buildBundle(webpackConfigClient),
   () => buildBundle(webpackConfigServer),
   () => log.success('Production build completed'),
+  (process) => process.exit(0),
 );
