@@ -14,6 +14,7 @@ let config = merge(webpackConfig, {
 
   entry: {
     server: [
+      '@babel/polyfill',
       paths.SERVER_ENTRY,
     ],
   },
