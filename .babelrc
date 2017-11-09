@@ -1,6 +1,6 @@
 {
   "presets": [
-    ["@keenai/keenai", {
+    ["@keenai/core", {
       "targets": {
         "node": "current",
       },
